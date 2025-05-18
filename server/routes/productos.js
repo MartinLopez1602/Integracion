@@ -8,18 +8,18 @@ const pool = require('../db');
  *     Producto:
  *       type: object
  *       properties:
- *         id:
+ *         id_prod:
  *           type: integer
  *           description: The producto ID
- *         name:
+ *         nombre_prod:
  *           type: string
  *           description: The producto name
- *         price:
+ *         precio_prod:
  *           type: number
  *           description: The producto price
- *         description:
- *           type: string
- *           description: The producto description
+ *         stock_prod:
+ *           type: integer
+ *           description: Available stock
  */
 
 /**
@@ -48,13 +48,13 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
- * /api/productos/{id}:
+ * /api/productos/{codigo}:
  *   get:
- *     summary: Get a producto by ID
+ *     summary: Get a producto by codigo
  *     tags: [Productos]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: codigo
  *         required: true
  *         description: The producto ID
  *         schema:
@@ -68,11 +68,11 @@ router.get('/', async (req, res) => {
  *         description: Server error
  */
 
-// GET producto by id
-router.get('/:id', async (req, res) => {
+// GET producto by codigo (id_prod)
+router.get('/:codigo', async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await pool.query('SELECT * FROM productos WHERE id = $1', [id]); // Change table name if needed
+    const { codigo } = req.params;
+    const result = await pool.query('SELECT * FROM productos WHERE id_prod = $1', [codigo]);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Producto not found' });
@@ -84,7 +84,5 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
-// Add more routes (POST, PUT, DELETE) as needed
 
 module.exports = router;
