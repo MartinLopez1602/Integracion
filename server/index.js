@@ -7,6 +7,7 @@ const categoriasRoutes = require('./routes/categorias');
 const sucursalesRoutes = require('./routes/sucursales');
 const pedidosRoutes = require('./routes/pedidos');
 const contactoRoutes = require('./routes/contacto');
+const monedaRoutes = require('./routes/moneda'); // Add this line
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -53,6 +54,7 @@ app.use('/api/categorias', categoriasRoutes);
 app.use('/api/sucursales', sucursalesRoutes);
 app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/contacto', contactoRoutes);
+app.use('/api/moneda', monedaRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Servidor backend en http://localhost:${PORT}`));
