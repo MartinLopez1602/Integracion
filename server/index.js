@@ -2,11 +2,40 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const pool = require('./db');
+const productsRoutes = require('./routes/productos');
+const categoriasRoutes = require('./routes/categorias');
+const sucursalesRoutes = require('./routes/sucursales');
+const pedidosRoutes = require('./routes/pedidos');
+const contactoRoutes = require('./routes/contacto');
+const monedaRoutes = require('./routes/moneda'); // Add this line
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API Integración',
+      version: '1.0.0',
+      description: 'API para gestionar productos, categorías, sucursales, pedidos y contacto',
+    },
+    servers: [
+      {
+        url: 'http://localhost:5000',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'], // Path to the API routes
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Middleware
 app.use(express.json());
 
-// Configuración de CORS (si es necesario)
+// Configuración de CORS
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -19,7 +48,13 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'API funcionando correctamente' });
 });
 
-// Define aquí tus rutas CRUD...
+// Registrar todas las rutas
+app.use('/api/productos', productsRoutes);
+app.use('/api/categorias', categoriasRoutes);
+app.use('/api/sucursales', sucursalesRoutes);
+app.use('/api/pedidos', pedidosRoutes);
+app.use('/api/contacto', contactoRoutes);
+app.use('/api/moneda', monedaRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Servidor backend en http://localhost:${PORT}`));
