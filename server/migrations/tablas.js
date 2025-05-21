@@ -1,5 +1,5 @@
 require('dotenv').config({ path: '../.env' });
-const pool = require('../db');
+const pool = require('../config/db');
 
 async function migrateTablas() {
   const client = await pool.connect();

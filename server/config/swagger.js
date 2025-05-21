@@ -12,7 +12,7 @@ const swaggerOptions = {
         },
       ],
     },
-    apis: ['./routes/*.js'],
+    apis: ['routes/moneda.js'],
   };
   
   module.exports = swaggerOptions;

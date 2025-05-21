@@ -56,17 +56,18 @@ router.get('/', async (req, res) => {
  *       - in: path
  *         name: codigo
  *         required: true
- *         description: The producto ID
+ *         description: ID del producto
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: The producto details
+ *         description: Producto encontrado
  *       404:
- *         description: Producto not found
+ *         description: Producto no encontrado
  *       500:
- *         description: Server error
+ *         description: Error del servidor
  */
+
 
 // GET producto by codigo (id_prod)
 router.get('/:codigo', async (req, res) => {
