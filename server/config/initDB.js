@@ -90,7 +90,7 @@ async function initDB() {
         precio_prod DECIMAL(10, 2) NOT NULL,
         stock_prod INTEGER,
         id_tipoprod INTEGER REFERENCES tipo_producto(id_tipoprod),
-        imagen_url TEXT
+        destacado_prod BOOLEAN DEFAULT FALSE
       );
 
       CREATE TABLE inventario (
