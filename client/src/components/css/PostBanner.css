@@ -18,9 +18,15 @@
     margin-top: -5px;
     color: #1e1e1e;
   }
+
+  .parrafo p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 1rem;
+  }
   
   .preferirnos-header .highlight {
-    color: #00b894;
+    color: #6edff3;
   }
   
   .preferirnos-header p {
@@ -51,9 +57,9 @@
   }
   
   .benefit-box img {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 1rem;
+    width: 55px;
+    height: 55px;
+    margin-bottom: 5px;
   }
   
   .benefit-box h4 {
@@ -67,4 +73,6 @@
     font-size: 0.95rem;
     color: #666;
   }
+
+
   

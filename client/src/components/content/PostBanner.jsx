@@ -9,11 +9,13 @@ function Preferirnos() {
           ⭐ ⭐ ⭐ ⭐ ⭐ <span>4.84 <small>(50+ valoraciones)</small></span>
         </div>
         <h2>
-          Más de <span className="highlight">3600+</span> clientes nos prefieren para su ferretería online.
+          Más de <span className="highlight">3600+</span> clientes nos prefieren como Ferreteria!
         </h2>
         <p>
-          Creamos componentes React reutilizables para que desarrolles tu proyecto de e-commerce con rapidez.
-          Nuestra arquitectura utiliza PostgreSQL, Express y React, permitiendo una escalabilidad real en cualquier entorno.
+        Ferremás es una ferretería local con más de 15 años de experiencia.<br />
+        Nos destacamos por ofrecer productos de calidad, asesoría experta y un servicio cercano y confiable.<br />
+        Nuestra misión es ser el aliado preferido de profesionales y familias en cada proyecto.<br />
+        En Ferremás<br />¡tu confianza es nuestra herramienta más valiosa!
         </p>
       </div>
 
@@ -21,17 +23,17 @@ function Preferirnos() {
         <div className="benefit-box">
           <img src="/images/star.png" alt="Estrella" />
           <h4>Alta puntuación</h4>
-          <p>Una de las plantillas de e-commerce más valoradas por su facilidad y rendimiento.</p>
+          <p>Porque nuestros consumidores, nos prefieren sobre la competencia!</p>
         </div>
         <div className="benefit-box">
           <img src="/images/discount.png" alt="Descuento" />
           <h4>Liderazgo en ventas</h4>
-          <p>Con más de 3600+ ventas, somos referencia en soluciones digitales para ferreterías.</p>
+          <p>Ofreciendo los mejores descuentos y promociones que otras ferreterias</p>
         </div>
         <div className="benefit-box">
           <img src="/images/deploy.png" alt="Deploy" />
-          <h4>Fácil de desplegar</h4>
-          <p>Incluye guías para implementar tu tienda en diversos entornos sin complicaciones.</p>
+          <h4>Miles de productos</h4>
+          <p>Incluimos una alta variedad de productos en nuestro catalogo!</p>
         </div>
         <div className="benefit-box">
           <img src="/images/support.png" alt="Soporte" />
