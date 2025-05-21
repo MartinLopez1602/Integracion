@@ -88,3 +88,60 @@ router.get('/:codigo', async (req, res) => {
 });
 
 module.exports = router;
+
+/**
+ * @swagger
+ * /api/productos:
+ *   post:
+ *     summary: Crear un nuevo producto
+ *     tags: [Productos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nombre_prod
+ *               - precio_prod
+ *               - stock_prod
+ *               - id_tipoprod
+ *             properties:
+ *               nombre_prod:
+ *                 type: string
+ *               precio_prod:
+ *                 type: number
+ *               stock_prod:
+ *                 type: integer
+ *               id_tipoprod:
+ *                 type: integer
+ *     responses:
+ *       201:
+ *         description: Producto creado exitosamente
+ *       400:
+ *         description: Datos inválidos
+ *       500:
+ *         description: Error del servidor
+ */
+router.post('/', async (req, res) => {
+  const { nombre_prod, precio_prod, stock_prod, id_tipoprod } = req.body;
+
+  if (!nombre_prod || !precio_prod || !stock_prod || !id_tipoprod) {
+    return res.status(400).json({ error: 'Faltan campos requeridos' });
+  }
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO producto (nombre_prod, precio_prod, stock_prod, id_tipoprod)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [nombre_prod, precio_prod, stock_prod, id_tipoprod]
+    );
+
+    console.log('Producto creado:', result.rows[0]);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error al crear producto:', err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});

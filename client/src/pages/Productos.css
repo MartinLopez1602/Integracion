@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .productos-container {
   max-width: 1200px;
   margin: 40px auto;
@@ -124,3 +125,69 @@
   border-radius: 4px;
   padding: 15px;
 }
+=======
+.contenedor {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f6f8;
+  }
+  
+  .titulo {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2rem;
+  }
+  
+  .formulario {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  
+  .formulario input,
+  .formulario button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .formulario button {
+    background-color: #2980b9;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .formulario button:hover {
+    background-color: #1f6391;
+  }
+  
+  .lista-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  
+  .card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #34495e;
+  }
+  
+  .card p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+>>>>>>> 72138afc4ceb63702f13bb4240aad5ac8831851f
