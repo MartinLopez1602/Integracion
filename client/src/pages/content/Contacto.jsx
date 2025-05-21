@@ -70,7 +70,7 @@ function Contacto() {
           <input
             type="tel"
             name="telefono"
-            placeholder="Tu teléfono (opcional)"
+            placeholder="Tu teléfono"
             value={form.telefono}
             onChange={handleChange}
           />

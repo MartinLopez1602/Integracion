@@ -200,6 +200,7 @@ async function initDB() {
         nombre_contacto VARCHAR(100) NOT NULL,
         correo_contacto VARCHAR(150) NOT NULL,
         mensaje_contacto TEXT NOT NULL,
+        telefono_contacto NUMERIC(9, 0),
         fecha_contacto TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
