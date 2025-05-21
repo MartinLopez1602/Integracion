@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const path = require('path');
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use('/api/contacto', contactoRoutes);
 app.use('/api/moneda', monedaRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/webpay', webpayRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Ruta de prueba
 app.get('/api/test', (req, res) => {

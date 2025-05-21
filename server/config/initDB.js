@@ -204,6 +204,12 @@ async function initDB() {
         fecha_contacto TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
+      CREATE TABLE administrador (
+        id_admin SERIAL PRIMARY KEY,
+        usr_admin TEXT NOT NULL,
+        pass_hash_admin TEXT NOT NULL
+      );
+
     `);
     await client.query('COMMIT');
     console.log('✅ Migración de tablas completada con éxito.');
@@ -246,25 +252,25 @@ async function initDB() {
       ON CONFLICT DO NOTHING;
 
 
-      INSERT INTO producto (nombre_prod, precio_prod, stock_prod, id_tipoprod) VALUES
-        ('Taladro', 49990, 10, 1),
-        ('Destornillador eléctrico', 29990, 15, 1),
-        ('Caja de herramientas', 39990, 20, 1),
-        ('Alargador', 7990, 25, 2),
-        ('Interruptor doble', 1990, 100, 2),
-        ('Portalámparas', 1290, 80, 2),
-        ('Cemento', 12000, 50, 3),
-        ('Arena gruesa', 6000, 100, 3),
-        ('Plancha OSB', 9500, 40, 3),
-        ('Esmalte sintético blanco', 15990, 30, 4),
-        ('Rodillo para pintar', 2990, 60, 4),
-        ('Pintura látex color crema', 13990, 25, 4),
-        ('Tijera de podar', 7990, 35, 5),
-        ('Manguera 15m', 12990, 40, 5),
-        ('Abono orgánico 5kg', 4990, 25, 5),
-        ('Caja de clavos 1"', 1990, 100, 6),
-        ('Pack de tornillos 2"', 2490, 120, 6),
-        ('Bisagra metálica 3"', 990, 70, 6)
+      INSERT INTO producto (nombre_prod, precio_prod, stock_prod, id_tipoprod, imagen_url) VALUES
+        ('Taladro', 49990, 10, 1, '/images/taladro.jpg'),
+        ('Destornillador eléctrico', 29990, 15, 1, '/images/destornillador-electrico.jpg'),
+        ('Caja de herramientas', 39990, 20, 1, '/images/caja-herramientas.jpg'),
+        ('Alargador', 7990, 25, 2, '/images/alargador.jpg'),
+        ('Interruptor doble', 1990, 100, 2, '/images/interruptor-doble.jpg'),
+        ('Portalámparas', 1290, 80, 2, '/images/portalamparas.jpg'),
+        ('Cemento', 12000, 50, 3, '/images/cemento.jpg'),
+        ('Arena gruesa', 6000, 100, 3, '/images/arena-gruesa.jpg'),
+        ('Plancha OSB', 9500, 40, 3, '/images/plancha-osb.jpg'),
+        ('Esmalte sintético blanco', 15990, 30, 4, '/images/esmalte-blanco.jpg'),
+        ('Rodillo para pintar', 2990, 60, 4, '/images/rodillo-pintar.jpg'),
+        ('Pintura látex color crema', 13990, 25, 4, '/images/pintura-latex-crema.jpg'),
+        ('Tijera de podar', 7990, 35, 5, '/images/tijera-podar.jpg'),
+        ('Manguera 15m', 12990, 40, 5, '/images/manguera-15m.jpg'),
+        ('Abono orgánico 5kg', 4990, 25, 5, '/images/abono-organico.jpg'),
+        ('Caja de clavos 1"', 1990, 100, 6, '/images/caja-clavos.jpg'),
+        ('Pack de tornillos 2"', 2490, 120, 6, '/images/pack-tornillos.jpg'),
+        ('Bisagra metálica 3"', 990, 70, 6, '/images/bisagra-metalica.jpg')
       ON CONFLICT DO NOTHING;
 
       INSERT INTO tipo_empleado (nom_rol_emp, desc_rol_emp) VALUES
@@ -289,6 +295,12 @@ async function initDB() {
 
       INSERT INTO cliente (id_usuario, id_medpago, direccion_cli, run_cli, dv_run_cli) VALUES
         (2, 1, 'Calle Falsa 123', 12345678, '9')
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO administrador (usr_admin, pass_hash_admin) VALUES
+        ('Lukas', '123'),
+        ('Franco', '123'),
+        ('Martin', '123')
       ON CONFLICT DO NOTHING;
 
       UPDATE producto SET destacado_prod = true WHERE id_prod IN (1, 2);
