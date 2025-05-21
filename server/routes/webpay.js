@@ -142,8 +142,7 @@ router.get('/commit', async (req, res) => {
       
       // Actualizar la transacción en tu BD
       await pool.query(
-        'UPDATE pedido SET id_estado_ped = 2 WHERE id_trans = (SELECT id_trans FROM transaccion WHERE token_trans = $1)',
-        [token_ws]
+        'UPDATE pedido SET id_estado_ped = 2 WHERE id_pedido = (SELECT id_pedido FROM pedido WHERE id_estado_ped = 1 ORDER BY fecha_pedido DESC LIMIT 1)'
       );
       
       // Redireccionar al cliente a la página de éxito
