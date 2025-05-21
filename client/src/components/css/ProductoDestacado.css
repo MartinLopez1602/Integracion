@@ -1,0 +1,42 @@
+.featured-section {
+    padding: 4rem 2rem;
+    background: #f8f8f8;
+    text-align: center;
+  }
+  
+  .featured-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .featured-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .featured-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 0.8rem;
+  }
+  
+  .featured-card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .featured-card p {
+    font-weight: bold;
+    color: #27ae60;
+  }
+  
