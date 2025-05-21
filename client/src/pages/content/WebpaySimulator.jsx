@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './WebpaySimulator.css';
+import '../css/WebpaySimulator.css';
 
 function WebpaySimulator() {
   const location = useLocation();

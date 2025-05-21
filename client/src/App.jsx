@@ -6,14 +6,14 @@ import { CartProvider } from './context/CartContext';
 import Navbar from '../src/components/content/Navbar';
 
 //paginas
-import Productos from './pages/Productos';
-import Pedidos from './pages/Pedidos';
-import Contacto from './pages/Contacto';
-import Home from './pages/Home';
-import Carrito from './pages/Carrito';
-import PagoExitoso from './pages/PagoExitoso';
-import PagoFallido from './pages/PagoFallido';
-import WebpaySimulator from './pages/WebpaySimulator';
+import Productos from '../src/pages/content/Productos';
+import Pedidos from '../src/pages/content/Pedidos';
+import Contacto from '../src/pages/content/Contacto';
+import Home from '../src/pages/content/Home';
+import Carrito from '../src/pages/content/Carrito';
+import PagoExitoso from '../src/pages/content/PagoExitoso';
+import PagoFallido from '../src/pages/content/PagoFallido';
+import WebpaySimulator from '../src/pages/content/WebpaySimulator';
 
 // enruta las paginas, como se hace en Angular, copia y pega otro nomas y le cambias el nombre
 function App() {

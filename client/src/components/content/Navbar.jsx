@@ -9,6 +9,11 @@ function Navbar() {
   return (
     <nav className="navbar">
       <NavLink to="/" className="logo">FERREMAS</NavLink>
+      <div className="navbar-toggle">
+        <span className="bar"></span>
+        <span className="bar"></span>
+        <span className="bar"></span>
+      </div>
       <ul className="nav-links">
         <li>
           <NavLink to="/productos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Productos</NavLink>

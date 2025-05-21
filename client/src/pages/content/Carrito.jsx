@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { CartContext } from '../context/CartContext';
+import { CartContext } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './Carrito.css';
+import '../css/Carrito.css';
 
 function Cart() {
   const { cart, total, removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
@@ -13,9 +13,6 @@ function Cart() {
     try {
       setLoading(true);
       setError(null);
-
-      // Reemplaza con la URL que te mostró ngrok
-      const ngrokUrl = 'https://b06e-186-10-139-156.ngrok-free.app';
       
       const buyOrder = `OC-${Date.now()}`;
       const sessionId = `S-${Date.now()}`;
@@ -25,8 +22,7 @@ function Cart() {
         buyOrder,
         sessionId,
         amount: total,
-        // Usa la URL de ngrok para el callback
-        returnUrl: `${ngrokUrl}/api/webpay/commit`
+        returnUrl : 'http://localhost:5000/api/webpay/commit',
       });
 
       window.location.href = response.data.url;

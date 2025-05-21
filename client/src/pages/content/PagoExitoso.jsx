@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CartContext } from '../context/CartContext';
-import './ResultadoPago.css';
+import { CartContext } from '../../context/CartContext';
+import '../css/ResultadoPago.css';
 
 function PagoExitoso() {
   const navigate = useNavigate();

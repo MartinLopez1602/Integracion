@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import './ResultadoPago.css';
+import '../css/ResultadoPago.css';
 
 function PagoFallido() {
   const [searchParams] = useSearchParams();
