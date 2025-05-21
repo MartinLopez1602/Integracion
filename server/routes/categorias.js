@@ -5,79 +5,77 @@ const pool = require('../config/db');
  * @swagger
  * components:
  *   schemas:
- *     Categoria:
+ *     TipoProducto:
  *       type: object
  *       properties:
- *         id_categoria:
+ *         id_tipoprod:
  *           type: integer
- *           description: The category ID
- *         nombre_categoria:
+ *           description: ID del tipo de producto
+ *         nombre_tipoprod:
  *           type: string
- *           description: The category name
- *         descripcion:
+ *           description: Nombre del tipo de producto
+ *         desc_tipoprod:
  *           type: string
- *           description: Category description
+ *           description: Descripción del tipo de producto
  *   responses:
- *     CategoriasResponse:
- *       description: A list of categories
+ *     TiposProductoResponse:
+ *       description: Lista de tipos de producto
  *       content:
  *         application/json:
  *           schema:
  *             type: array
  *             items:
- *               $ref: '#/components/schemas/Categoria'
+ *               $ref: '#/components/schemas/TipoProducto'
  */
 
 /**
  * @swagger
- * /api/categorias:
+ * /api/tipos-producto:
  *   get:
- *     summary: Returns all categorias
- *     tags: [Categorias]
+ *     summary: Obtiene todos los tipos de producto
+ *     tags: [Tipos de Producto]
  *     parameters:
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           minimum: 1
- *         description: Maximum number of categories to return
+ *         description: Número máximo de resultados a retornar
  *       - in: query
  *         name: offset
  *         schema:
  *           type: integer
  *           minimum: 0
- *         description: Number of categories to skip
+ *         description: Número de elementos a omitir desde el inicio
  *     responses:
  *       200:
- *         $ref: '#/components/responses/CategoriasResponse'
+ *         $ref: '#/components/responses/TiposProductoResponse'
  *       500:
- *         description: Server error
+ *         description: Error interno del servidor
  */
 
-// GET all categorias with optional pagination
+// GET all tipo_producto with optional pagination
 router.get('/', async (req, res) => {
   const { limit, offset } = req.query;
 
-  // Validar parámetros de consulta
-  const limitValue = parseInt(limit, 10) || 10; // Valor predeterminado: 10
-  const offsetValue = parseInt(offset, 10) || 0; // Valor predeterminado: 0
+  const limitValue = parseInt(limit, 10) || 10;
+  const offsetValue = parseInt(offset, 10) || 0;
 
-  // Agregar console.log para depuración
   console.log(`Limit: ${limitValue}, Offset: ${offsetValue}`);
 
   if (limitValue < 1 || offsetValue < 0) {
-    return res.status(400).json({ error: 'Invalid query parameters' });
+    return res.status(400).json({ error: 'Parámetros de consulta inválidos' });
   }
 
   try {
     const result = await pool.query(
-      'SELECT * FROM categorias LIMIT $1 OFFSET $2',
+      'SELECT * FROM tipo_producto LIMIT $1 OFFSET $2',
       [limitValue, offsetValue]
     );
     res.json(result.rows);
   } catch (err) {
-    console.error('Database error:', err.message);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Error al consultar tipo_producto:', err.message);
+    res.status(500).json({ error: 'Error del servidor' });
   }
 });
 
