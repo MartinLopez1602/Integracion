@@ -191,6 +191,65 @@ async function initDB() {
     await client.query('COMMIT');
     console.log('✅ Migración de tablas completada con éxito.');
 
+    console.log('📥 Insertando datos iniciales...');
+    await client.query('BEGIN');
+    await client.query(`
+      INSERT INTO region (nom_region) VALUES
+        ('Región Metropolitana'),
+        ('Región de Valparaíso'),
+        ('Región del Biobío')
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO comuna (id_region, nom_comuna) VALUES
+        (1, 'Santiago'),
+        (2, 'Valparaíso'),
+        (3, 'Concepción')
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO sucursal (nombre_sucursal, direccion_sucursal, id_comuna) VALUES
+        ('Sucursal Centro', 'Av. Principal 123', 1),
+        ('Sucursal Puerto', 'Calle Marina 456', 2)
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO tipo_producto (nombre_tipoprod, desc_tipoprod) VALUES
+        ('Herramientas', 'Herramientas manuales y eléctricas'),
+        ('Electricidad', 'Material eléctrico'),
+        ('Construcción', 'Materiales de obra')
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO producto (nombre_prod, precio_prod, stock_prod, id_tipoprod) VALUES
+        ('Taladro', 49990, 10, 1),
+        ('Alargador', 7990, 25, 2),
+        ('Cemento', 12000, 50, 3)
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO tipo_empleado (nom_rol_emp, desc_rol_emp) VALUES
+        ('Administrador', 'Acceso total'),
+        ('Vendedor', 'Atención al cliente')
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO usuario (correo_user, pass_hash_user, nombre_user, apellido_user, apellido2_user) VALUES
+        ('admin@ejemplo.com', 'hashed_pass', 'Admin', 'Uno', 'Dos'),
+        ('cliente@ejemplo.com', 'hashed_pass', 'Cliente', 'Tres', 'Cuatro')
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO tipo_pago (nom_tipopago, desc_tipopago) VALUES
+        ('Tarjeta', 'Pago con tarjeta'),
+        ('Efectivo', 'Pago en efectivo')
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO medio_pago (id_tipopago, token_medpago, pred_medpago) VALUES
+        (1, 'token123', true),
+        (2, 'token456', false)
+      ON CONFLICT DO NOTHING;
+
+      INSERT INTO cliente (id_usuario, id_medpago, direccion_cli, run_cli, dv_run_cli) VALUES
+        (2, 1, 'Calle Falsa 123', 12345678, '9')
+      ON CONFLICT DO NOTHING;
+    `);
+    await client.query('COMMIT');
+    console.log('✅ Datos insertados correctamente.');
+
     client.release();
     await pool.end();
   } catch (err) {
