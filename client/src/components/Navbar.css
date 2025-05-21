@@ -1,0 +1,76 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 20px 40px;
+  border-bottom: 1px solid #e0e0e0;
+  font-family: 'Poetsen One', sans-serif;
+}
+
+.logo {
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+  text-decoration: none;
+  font-family: 'Poetsen One', sans-serif;
+}
+
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end; /* ⬅️ Alinea a la derecha */
+  gap: 35px;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+}
+
+.nav-link {
+  position: relative;
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s;
+  font-family: 'Playpen Sans Deva', cursive;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 3px;
+  bottom: 15px;
+  left: 0;
+  background-color: #007bff;
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+
+.cart-link {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}

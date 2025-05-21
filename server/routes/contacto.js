@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const pool = require('../db');
+const pool = require('../config/db');
 
 /**
  * @swagger
@@ -40,36 +40,27 @@ const pool = require('../db');
  *           schema:
  *             $ref: '#/components/schemas/Contacto'
  *     responses:
- *       201:
- *         description: Message sent successfully
- *       400:
- *         description: Invalid input data
+ *       200:
+ *         description: Message submitted successfully
  *       500:
  *         description: Server error
  */
 
 // POST contact message
 router.post('/', async (req, res) => {
+  const { nombre, email, telefono, mensaje } = req.body;
+
+  // Agregar console.log para depuración
+  console.log('Request body:', req.body);
+
   try {
-    const { nombre, email, telefono, mensaje } = req.body;
-    
-    // Validate input
-    if (!nombre || !email || !mensaje) {
-      return res.status(400).json({ 
-        error: 'Invalid input: nombre, email, and mensaje are required' 
-      });
-    }
-    
-    // Insert message
-    await pool.query(
-      'INSERT INTO contacto (nombre, email, telefono, mensaje, fecha) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)',
-      [nombre, email, telefono || '', mensaje]
+    const result = await pool.query(
+      'INSERT INTO contacto (nombre, email, telefono, mensaje) VALUES ($1, $2, $3, $4) RETURNING *',
+      [nombre, email, telefono, mensaje]
     );
-    
-    res.status(201).json({ message: 'Message sent successfully' });
-    
+    res.status(200).json({ message: 'Message submitted successfully', data: result.rows[0] });
   } catch (err) {
-    console.error(err.message);
+    console.error('Database error:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });
