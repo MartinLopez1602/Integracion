@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Productos.css'; // Reusing the productos styling for now
+import '../css/Productos.css'; // Reusing the productos styling for now
 
 function Pedidos() {
   const [pedidos, setPedidos] = useState([]);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import './Productos.css';
-import { CartContext } from '../context/CartContext';
+import '../css/Productos.css';
+import { CartContext } from '../../context/CartContext';
 
 function Productos() {
   const [productos, setProductos] = useState([]);

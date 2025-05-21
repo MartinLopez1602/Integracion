@@ -6,11 +6,11 @@ import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 
 //paginas
-import Productos from './pages/Productos';
-import Pedidos from './pages/Pedidos';
-import Contacto from './pages/Contacto';
-import Home from './pages/Home';
-import Carrito from './pages/Carrito';
+import Productos from '../src/pages/content/Productos';
+import Pedidos from '../src/pages/content/Pedidos';
+import Contacto from '../src/pages/content/Contacto';
+import Home from '../src/pages/content/Home';
+import Carrito from '../src/pages/content/Carrito';
 
 // enruta las paginas, como se hace en Angular, copia y pega otro nomas y le cambias el nombre
 function App() {
