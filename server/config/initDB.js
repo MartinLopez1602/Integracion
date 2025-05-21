@@ -278,6 +278,8 @@ async function initDB() {
       INSERT INTO cliente (id_usuario, id_medpago, direccion_cli, run_cli, dv_run_cli) VALUES
         (2, 1, 'Calle Falsa 123', 12345678, '9')
       ON CONFLICT DO NOTHING;
+
+      UPDATE producto SET destacado_prod = true WHERE id_prod IN (1, 2);
     `);
     await client.query('COMMIT');
     console.log('✅ Datos insertados correctamente.');

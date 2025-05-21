@@ -35,6 +35,23 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET productos destacados
+router.get('/destacados', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id_prod, nombre_prod, precio_prod, stock_prod
+      FROM producto
+      WHERE destacado_prod = true
+      LIMIT 4
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error al obtener productos destacados:', err.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
 /**
  * @swagger
  * /api/productos/{codigo}:
