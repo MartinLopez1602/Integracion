@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Contacto.css';
 
 function Contacto() {
   const [form, setForm] = useState({
@@ -14,42 +15,43 @@ function Contacto() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Formulario enviado:', form);
-    alert('Mensaje enviado. Gracias por contactarnos.');
+    alert('Gracias por contactarnos, te responderemos pronto.');
     setForm({ nombre: '', correo: '', mensaje: '' });
   };
 
   return (
-    <section style={{ padding: '40px' }}>
-      <h2>Contacto</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px' }}>
-        <input
-          type="text"
-          name="nombre"
-          placeholder="Tu nombre"
-          value={form.nombre}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="correo"
-          placeholder="Tu correo"
-          value={form.correo}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="mensaje"
-          placeholder="Escribe tu mensaje..."
-          rows="5"
-          value={form.mensaje}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit" style={{ backgroundColor: '#222', color: '#fff', padding: '10px 20px', border: 'none', cursor: 'pointer' }}>
-          Enviar
-        </button>
-      </form>
+    <section className="contacto-container">
+      <div className="contacto-box">
+        <h2 className="contacto-title">Contáctanos</h2>
+        <p className="contacto-desc">¿Tienes dudas o necesitas ayuda? Completa el formulario y nos comunicaremos contigo.</p>
+        <form onSubmit={handleSubmit} className="contacto-form">
+          <input
+            type="text"
+            name="nombre"
+            placeholder="Tu nombre"
+            value={form.nombre}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="email"
+            name="correo"
+            placeholder="Tu correo"
+            value={form.correo}
+            onChange={handleChange}
+            required
+          />
+          <textarea
+            name="mensaje"
+            placeholder="Escribe tu mensaje..."
+            rows="5"
+            value={form.mensaje}
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">Enviar mensaje</button>
+        </form>
+      </div>
     </section>
   );
 }

@@ -1,54 +1,34 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 const app = express();
-const pool = require('./db');
+
+// Configuraciones
+const swaggerOptions = require('./config/swagger');
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+// Middlewares
+app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(express.json());
+
+// Documentación Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// Rutas
 const productsRoutes = require('./routes/productos');
 const categoriasRoutes = require('./routes/categorias');
 const sucursalesRoutes = require('./routes/sucursales');
 const pedidosRoutes = require('./routes/pedidos');
 const contactoRoutes = require('./routes/contacto');
-const monedaRoutes = require('./routes/moneda'); // Add this line
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+const monedaRoutes = require('./routes/moneda');
 
-// Swagger configuration
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API Integración',
-      version: '1.0.0',
-      description: 'API para gestionar productos, categorías, sucursales, pedidos y contacto',
-    },
-    servers: [
-      {
-        url: 'http://localhost:5000',
-      },
-    ],
-  },
-  apis: ['./routes/*.js'], // Path to the API routes
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
-// Middleware
-app.use(express.json());
-
-// Configuración de CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  next();
-});
-
-// Rutas de ejemplo
 app.get('/api/test', (req, res) => {
   res.json({ message: 'API funcionando correctamente' });
 });
 
-// Registrar todas las rutas
 app.use('/api/productos', productsRoutes);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/sucursales', sucursalesRoutes);
@@ -56,5 +36,11 @@ app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/contacto', contactoRoutes);
 app.use('/api/moneda', monedaRoutes);
 
+// Ruta no encontrada
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+// Servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Servidor backend en http://localhost:${PORT}`));
