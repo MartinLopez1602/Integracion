@@ -10,7 +10,7 @@ function Productos() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mensajes, setMensajes] = useState([]);
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, cart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchDatos = async () => {
@@ -34,7 +34,35 @@ function Productos() {
     fetchDatos();
   }, []);
 
+  //funcion para ver  si excede el stock en el carrito
+  const isStockAvailable = (producto) => {
+    const itemInCart = cart.find(item => item.id_prod === producto.id_prod);
+    const quantityInCart = itemInCart ? itemInCart.quantity : 0;
+    return quantityInCart < producto.stock_prod;
+  };
+
   const handleAddToCart = (producto) => {
+    // Check if adding one more would exceed stock
+    if (!isStockAvailable(producto)) {
+      // Show error message
+      setMensajes(prevMensajes => {
+        const errorMsg = {
+          id: `error-${producto.id_prod}`,
+          nombre: producto.nombre_prod,
+          error: true,
+          message: `No hay más unidades disponibles de este producto (Stock: ${producto.stock_prod})`
+        };
+
+        setTimeout(() => {
+          setMensajes(current => current.filter(m => m.id !== errorMsg.id));
+        }, 3000);
+
+        return [...prevMensajes, errorMsg];
+      });
+      return;
+    }
+
+    // If stock is available, proceed with adding to cart
     addToCart(producto);
 
     setMensajes(prevMensajes => {
@@ -50,7 +78,8 @@ function Productos() {
         const nuevo = {
           id: producto.id_prod,
           nombre: producto.nombre_prod,
-          cantidad: 1
+          cantidad: 1,
+          error: false
         };
 
         setTimeout(() => {
@@ -74,8 +103,8 @@ function Productos() {
     <div className="productos-wrapper">
       <div className="toast-container">
         {mensajes.map(mensaje => (
-          <div key={mensaje.id} className="toast">
-            <span>{mensaje.nombre} agregado x{mensaje.cantidad}</span>
+          <div key={mensaje.id} className={`toast ${mensaje.error ? 'toast-error' : ''}`}>
+            <span>{mensaje.error ? mensaje.message : `${mensaje.nombre} agregado x${mensaje.cantidad}`}</span>
             <button className="toast-close" onClick={() => handleCerrarMensaje(mensaje.id)}>×</button>
           </div>
         ))}
@@ -113,26 +142,34 @@ function Productos() {
         )}
 
         <div className="productos-grid">
-          {productosFiltrados.map(producto => (
-            <div key={producto.id_prod} className="producto-card">
-              <div className="producto-info">
-                <h3>{producto.nombre_prod}</h3>
-                <span className="producto-categoria">{producto.tipo_producto || 'Sin categoría'}</span>
-                <div className="producto-details">
-                  <span className="producto-precio">${producto.precio_prod}</span>
-                  <span className="producto-stock">
-                    Stock: <strong>{producto.stock_prod}</strong>
-                  </span>
+          {productosFiltrados.map(producto => {
+            const itemInCart = cart.find(item => item.id_prod === producto.id_prod);
+            const quantityInCart = itemInCart ? itemInCart.quantity : 0;
+            const remainingStock = producto.stock_prod - quantityInCart;
+            
+            return (
+              <div key={producto.id_prod} className="producto-card">
+                <div className="producto-info">
+                  <h3>{producto.nombre_prod}</h3>
+                  <span className="producto-categoria">{producto.tipo_producto || 'Sin categoría'}</span>
+                  <div className="producto-details">
+                    <span className="producto-precio">${producto.precio_prod}</span>
+                    <span className={`producto-stock ${remainingStock <= 0 ? 'agotado' : remainingStock <= 5 ? 'bajo-stock' : ''}`}>
+                      Stock: <strong>{producto.stock_prod}</strong>
+                      {quantityInCart > 0 && <span> (En carrito: {quantityInCart})</span>}
+                    </span>
+                  </div>
+                  <button 
+                    className={`producto-btn ${remainingStock <= 0 ? 'disabled' : ''}`}
+                    onClick={() => handleAddToCart(producto)}
+                    disabled={remainingStock <= 0}
+                  >
+                    {remainingStock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
+                  </button>
                 </div>
-                <button 
-                  className="producto-btn"
-                  onClick={() => handleAddToCart(producto)}
-                >
-                  Agregar al carrito
-                </button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {productosFiltrados.length === 0 && !loading && !error && (

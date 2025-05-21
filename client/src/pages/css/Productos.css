@@ -133,3 +133,27 @@
   font-style: italic;
   margin-top: 1.5rem;
 }
+
+/* Add these classes for stock status */
+.producto-stock.agotado {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.producto-stock.bajo-stock {
+  color: #ffc107;
+}
+
+.producto-btn.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.producto-btn.disabled:hover {
+  background-color: #ccc;
+}
+
+/* Toast error style */
+.toast-error {
+  background-color: #dc3545;
+}

@@ -91,21 +91,42 @@ router.post('/', async (req, res) => {
 
       // Get product details including name
       const productResult = await client.query(
-        'SELECT nombre_prod FROM producto WHERE id_prod = $1',
+        'SELECT nombre_prod, stock_prod FROM producto WHERE id_prod = $1',
         [item.producto_id]
       );
       
-      const nombreProducto = productResult.rows.length > 0 
-        ? productResult.rows[0].nombre_prod 
-        : `Producto #${item.producto_id}`;
+      if (productResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({ error: `Producto con ID ${item.producto_id} no encontrado` });
+      }
+      
+      const nombreProducto = productResult.rows[0].nombre_prod;
+      const stockActual = productResult.rows[0].stock_prod;
+      
+      // Verificar si hay suficiente stock
+      if (stockActual < item.cantidad) {
+        await client.query('ROLLBACK');
+        return res.status(400).json({ 
+          error: `Stock insuficiente para el producto ${nombreProducto}. Disponible: ${stockActual}, Solicitado: ${item.cantidad}` 
+        });
+      }
       
       const precioTotal = item.cantidad * item.precio_unitario;
 
+      // Insertar detalle del pedido
       await client.query(
         `INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unit, precio_total, nombre_producto) 
-         VALUES ($1, $2, $3, $4, $5, $6)`,
+        VALUES ($1, $2, $3, $4, $5, $6)`,
         [pedidoId, item.producto_id, item.cantidad, item.precio_unitario, precioTotal, nombreProducto]
       );
+      
+      // Actualizar el stock del producto restando la cantidad comprada
+      await client.query(
+        'UPDATE producto SET stock_prod = stock_prod - $1 WHERE id_prod = $2',
+        [item.cantidad, item.producto_id]
+      );
+      
+      console.log(`Stock actualizado para ${nombreProducto}: ${stockActual} - ${item.cantidad} = ${stockActual - item.cantidad}`);
     }
 
     await client.query('COMMIT');
