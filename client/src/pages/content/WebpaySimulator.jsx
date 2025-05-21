@@ -1,37 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/WebpaySimulator.css';
+import { CartContext } from '../../context/CartContext'; 
 
 function WebpaySimulator() {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { cart } = useContext(CartContext); 
   
   // Obtener parámetros de la URL
   const params = new URLSearchParams(location.search);
   const token = params.get('token');
   const amount = params.get('amount');
   
-    // In the handleSuccess function:
-    const handleSuccess = async () => {
-        setLoading(true);
-        try {
-            // First navigate to success page
-            navigate(`/pago-exitoso?token=${token}`);
-            
-            // Make sure we're passing token_ws parameter exactly as the API expects it
-            await axios.get(`http://localhost:5000/api/webpay/commit`, {
-                params: { token_ws: token }
-            })
-            .catch(err => console.log('Background notification error:', err));
-        } catch (error) {
-            console.error('Error al procesar pago:', error);
-            navigate('/pago-fallido');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const handleSuccess = async () => {
+    setLoading(true);
+
+    try {
+      // First save the order
+      const estadosResponse = await axios.get('http://localhost:5000/api/pedidos/estados');
+      const estadoId = estadosResponse.data?.length > 0 ? estadosResponse.data[0].id_estado_ped : 1;
+      
+      const pedidoData = {
+        cliente_id: 1,
+        estado_id: estadoId,
+        productos: cart.map(item => ({
+          producto_id: item.id_prod,
+          cantidad: item.quantity,
+          precio_unitario: item.precio_prod
+        }))
+      };
+      
+      // Save the order first
+      await axios.post('http://localhost:5000/api/pedidos', pedidoData);
+      
+      // CHANGE THIS PART - Instead of using Axios, redirect the browser window directly
+      // This will follow the server-side redirect properly
+      window.location.href = `http://localhost:5000/api/webpay/commit?token_ws=${token}`;
+      
+      // Remove the navigate call since the redirect will happen from the server
+      // navigate(`/pago-exitoso?token=${token}`);
+    } catch (error) {
+      console.error('Error al procesar pago:', error);
+      navigate('/pago-fallido');
+      setLoading(false);
+    }
+  };
   
   const handleFailure = () => {
     navigate('/pago-fallido');

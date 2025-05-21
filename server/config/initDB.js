@@ -90,7 +90,8 @@ async function initDB() {
         precio_prod DECIMAL(10, 2) NOT NULL,
         stock_prod INTEGER,
         id_tipoprod INTEGER REFERENCES tipo_producto(id_tipoprod),
-        imagen_url TEXT
+        imagen_url TEXT,
+        destacado_prod BOOLEAN DEFAULT FALSE
       );
 
       CREATE TABLE inventario (
@@ -188,8 +189,10 @@ async function initDB() {
         id_detalle_ped SERIAL PRIMARY KEY,
         id_pedido INTEGER REFERENCES pedido(id_pedido) ON DELETE CASCADE,
         id_producto INTEGER REFERENCES producto(id_prod),
+        cantidad INTEGER,
         precio_unit DECIMAL(10,2),
-        precio_total DECIMAL(10,2)
+        precio_total DECIMAL(10,2),
+        nombre_producto VARCHAR(100)
       );
 
       CREATE TABLE contacto (
@@ -223,6 +226,14 @@ async function initDB() {
         ('Sucursal Centro', 'Av. Principal 123', 1),
         ('Sucursal Puerto', 'Calle Marina 456', 2)
       ON CONFLICT DO NOTHING;
+      
+      INSERT INTO estado_pedido (id_estado_ped, nom_estado_ped, desc_estado_ped) VALUES
+      (1, 'Pendiente', 'Pedido registrado pero pendiente de pago'),
+      (2, 'Pagado', 'Pedido con pago confirmado'),
+      (3, 'En preparación', 'Pedido siendo preparado para envío'),
+      (4, 'Enviado', 'Pedido enviado al cliente'),
+      (5, 'Entregado', 'Pedido entregado al cliente'),
+      (6, 'Cancelado', 'Pedido cancelado');
 
       INSERT INTO tipo_producto (nombre_tipoprod, desc_tipoprod) VALUES
         ('Herramientas', 'Herramientas manuales y eléctricas'),

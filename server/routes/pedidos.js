@@ -89,12 +89,22 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ error: 'Cada producto debe incluir producto_id, cantidad y precio_unitario' });
       }
 
+      // Get product details including name
+      const productResult = await client.query(
+        'SELECT nombre_prod FROM producto WHERE id_prod = $1',
+        [item.producto_id]
+      );
+      
+      const nombreProducto = productResult.rows.length > 0 
+        ? productResult.rows[0].nombre_prod 
+        : `Producto #${item.producto_id}`;
+      
       const precioTotal = item.cantidad * item.precio_unitario;
 
       await client.query(
-        `INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unit, precio_total) 
-         VALUES ($1, $2, $3, $4, $5)`,
-        [pedidoId, item.producto_id, item.cantidad, item.precio_unitario, precioTotal]
+        `INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unit, precio_total, nombre_producto) 
+         VALUES ($1, $2, $3, $4, $5, $6)`,
+        [pedidoId, item.producto_id, item.cantidad, item.precio_unitario, precioTotal, nombreProducto]
       );
     }
 
@@ -111,6 +121,112 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Error del servidor' });
   } finally {
     client.release();
+  }
+});
+
+/**
+ * @swagger
+ * /api/pedidos:
+ *   get:
+ *     summary: Obtener todos los pedidos agrupados por estado
+ *     tags: [Pedidos]
+ *     responses:
+ *       200:
+ *         description: Lista de pedidos agrupados por estado
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/', async (req, res) => {
+  try {
+    //  query to use nombre_producto from detalle_pedido
+    const result = await pool.query(`
+      SELECT 
+        p.id_pedido,
+        p.id_cliente,
+        p.fecha_pedido,
+        p.fecha_entrega,
+        e.id_estado_ped,
+        e.nom_estado_ped,
+        e.desc_estado_ped,
+        json_agg(
+          json_build_object(
+            'id_detalle', dp.id_detalle_ped,
+            'producto_id', dp.id_producto,
+            'nombre_producto', dp.nombre_producto,
+            'cantidad', dp.cantidad,
+            'precio_unit', dp.precio_unit,
+            'precio_total', dp.precio_total
+          )
+        ) AS detalles
+      FROM pedido p
+      JOIN estado_pedido e ON p.id_estado_ped = e.id_estado_ped
+      JOIN detalle_pedido dp ON p.id_pedido = dp.id_pedido
+      GROUP BY p.id_pedido, e.id_estado_ped, e.nom_estado_ped, e.desc_estado_ped
+      ORDER BY p.fecha_pedido DESC
+    `);
+
+    // Group estado
+    const groupedOrders = {};
+    
+    result.rows.forEach(order => {
+      const statusId = order.id_estado_ped;
+      const statusName = order.nom_estado_ped;
+      
+      if (!groupedOrders[statusId]) {
+        groupedOrders[statusId] = {
+          status_id: statusId,
+          status_name: statusName,
+          status_description: order.desc_estado_ped,
+          orders: []
+        };
+      }
+      
+      groupedOrders[statusId].orders.push({
+        id_pedido: order.id_pedido,
+        id_cliente: order.id_cliente,
+        fecha_pedido: order.fecha_pedido,
+        fecha_entrega: order.fecha_entrega,
+        detalles: order.detalles
+      });
+    });
+    
+    //convierte en array
+    const response = Object.values(groupedOrders);
+    
+    res.json(response);
+  } catch (err) {
+    console.error('Error al obtener pedidos:', err.message);
+    res.status(500).json({ error: 'Error al obtener pedidos' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/pedidos/estados:
+ *   get:
+ *     summary: Obtener todos los estados de pedido
+ *     tags: [Pedidos]
+ *     responses:
+ *       200:
+ *         description: Lista de estados de pedido
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/estados', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT 
+        id_estado_ped,
+        nom_estado_ped,
+        desc_estado_ped
+      FROM estado_pedido 
+      ORDER BY id_estado_ped
+    `);
+    
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error al obtener estados de pedido:', err.message);
+    res.status(500).json({ error: 'Error al obtener estados de pedido' });
   }
 });
 
