@@ -8,8 +8,6 @@
   "dependencies": {
     "axios": "^1.9.0",
     "cors": "^2.8.5",
-    "react-parallax-tilt": "^1.7.295",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "react-parallax-tilt": "^1.7.295"
   }
 }
