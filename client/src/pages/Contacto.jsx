@@ -1,22 +1,39 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './Contacto.css';
 
 function Contacto() {
   const [form, setForm] = useState({
     nombre: '',
-    correo: '',
+    email: '',
+    telefono: '',
     mensaje: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Formulario enviado:', form);
-    alert('Gracias por contactarnos, te responderemos pronto.');
-    setForm({ nombre: '', correo: '', mensaje: '' });
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Llamada a la API con axios
+      const response = await axios.post('http://localhost:5000/api/contacto', form);
+      console.log('Respuesta del servidor:', response.data);
+      setSuccess(true);
+      setForm({ nombre: '', email: '', telefono: '', mensaje: '' });
+    } catch (err) {
+      console.error('Error al enviar mensaje:', err);
+      setError('Error al enviar el mensaje. Por favor intenta nuevamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -24,6 +41,15 @@ function Contacto() {
       <div className="contacto-box">
         <h2 className="contacto-title">Contáctanos</h2>
         <p className="contacto-desc">¿Tienes dudas o necesitas ayuda? Completa el formulario y nos comunicaremos contigo.</p>
+        
+        {success && (
+          <div className="success-message">
+            ¡Gracias por contactarnos! Te responderemos pronto.
+          </div>
+        )}
+        
+        {error && <div className="error-message">{error}</div>}
+        
         <form onSubmit={handleSubmit} className="contacto-form">
           <input
             type="text"
@@ -35,11 +61,18 @@ function Contacto() {
           />
           <input
             type="email"
-            name="correo"
+            name="email"
             placeholder="Tu correo"
-            value={form.correo}
+            value={form.email}
             onChange={handleChange}
             required
+          />
+          <input
+            type="tel"
+            name="telefono"
+            placeholder="Tu teléfono (opcional)"
+            value={form.telefono}
+            onChange={handleChange}
           />
           <textarea
             name="mensaje"
@@ -49,7 +82,9 @@ function Contacto() {
             onChange={handleChange}
             required
           />
-          <button type="submit">Enviar mensaje</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Enviando...' : 'Enviar mensaje'}
+          </button>
         </form>
       </div>
     </section>

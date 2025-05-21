@@ -61,3 +61,20 @@
     background-color: #0056b3;
   }
   
+  .success-message {
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #d4edda;
+  color: #155724;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.error-message {
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border-radius: 4px;
+  text-align: center;
+}
