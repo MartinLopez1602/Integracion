@@ -45,10 +45,16 @@ const pool = require('../config/db');
 router.get('/:id/stock', async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Log del ID de la sucursal recibido
+    console.log('ID de sucursal recibido:', id);
     
     // Verify branch exists
     const sucursal = await pool.query('SELECT * FROM sucursales WHERE id_sucursal = $1', [id]);
+    console.log('Resultado de la consulta de sucursal:', sucursal.rows);
+
     if (sucursal.rows.length === 0) {
+      console.log('Sucursal no encontrada para el ID:', id);
       return res.status(404).json({ error: 'Sucursal not found' });
     }
     
@@ -60,10 +66,14 @@ router.get('/:id/stock', async (req, res) => {
        WHERE s.sucursal_id = $1`, 
       [id]
     );
+
+    // Log del resultado de la consulta de stock
+    console.log('Resultado de la consulta de stock:', result.rows);
     
     res.json(result.rows);
   } catch (err) {
-    console.error(err.message);
+    // Log del error
+    console.error('Error al obtener el stock:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });

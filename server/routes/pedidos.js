@@ -59,25 +59,33 @@ router.post('/', async (req, res) => {
   
   try {
     const { sucursal_id, productos } = req.body;
+
+    // Log request body
+    console.log('Request body:', req.body);
     
     // Validate input
     if (!sucursal_id || !productos || !Array.isArray(productos) || productos.length === 0) {
+      console.log('Validation failed: Missing sucursal_id or productos array');
       return res.status(400).json({ error: 'Invalid input: sucursal_id and productos array are required' });
     }
     
     // Start transaction
+    console.log('Starting transaction...');
     await client.query('BEGIN');
     
     // Create order
+    console.log('Inserting into pedidos table...');
     const orderResult = await client.query(
       'INSERT INTO pedidos (sucursal_id, fecha_pedido) VALUES ($1, CURRENT_TIMESTAMP) RETURNING id_pedido',
       [sucursal_id]
     );
     
     const pedidoId = orderResult.rows[0].id_pedido;
+    console.log('Order created with ID:', pedidoId);
     
     // Add order items
     for (const item of productos) {
+      console.log('Inserting into pedidos_detalle:', item);
       await client.query(
         'INSERT INTO pedidos_detalle (pedido_id, producto_id, cantidad) VALUES ($1, $2, $3)',
         [pedidoId, item.producto_id, item.cantidad]
@@ -85,6 +93,7 @@ router.post('/', async (req, res) => {
     }
     
     // Commit transaction
+    console.log('Committing transaction...');
     await client.query('COMMIT');
     
     res.status(201).json({ 
@@ -94,11 +103,13 @@ router.post('/', async (req, res) => {
     
   } catch (err) {
     // Rollback in case of error
+    console.log('Error occurred, rolling back transaction:', err.message);
     await client.query('ROLLBACK');
     console.error(err.message);
     res.status(500).json({ error: 'Server error' });
   } finally {
     // Release client
+    console.log('Releasing database client...');
     client.release();
   }
 });

@@ -1,47 +1,30 @@
-const router = require('express').Router();
-const pool = require('../config/db');
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Producto:
- *       type: object
- *       properties:
- *         id_prod:
- *           type: integer
- *           description: The producto ID
- *         nombre_prod:
- *           type: string
- *           description: The producto name
- *         precio_prod:
- *           type: number
- *           description: The producto price
- *         stock_prod:
- *           type: integer
- *           description: Available stock
- */
+const express = require('express');
+const router = express.Router();
+const pool = require('../config/db'); // Asegúrate de que esta ruta sea correcta
 
 /**
  * @swagger
  * /api/productos:
  *   get:
- *     summary: Returns all productos
+ *     summary: Get all productos
  *     tags: [Productos]
  *     responses:
  *       200:
- *         description: The list of productos
+ *         description: Lista de productos
  *       500:
- *         description: Server error
+ *         description: Error del servidor
  */
 
 // GET all productos
 router.get('/', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM productos'); 
+    const result = await pool.query('SELECT * FROM productos');
+    // Log de los productos obtenidos
+    console.log('Productos obtenidos:', result.rows);
     res.json(result.rows);
   } catch (err) {
-    console.error(err.message);
+    // Log del error
+    console.error('Error al obtener productos:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -68,20 +51,28 @@ router.get('/', async (req, res) => {
  *         description: Error del servidor
  */
 
-
 // GET producto by codigo (id_prod)
 router.get('/:codigo', async (req, res) => {
   try {
     const { codigo } = req.params;
+
+    // Log del parámetro recibido
+    console.log('Código recibido:', codigo);
+
     const result = await pool.query('SELECT * FROM productos WHERE id_prod = $1', [codigo]);
-    
+
+    // Log del resultado de la consulta
+    console.log('Resultado de la consulta:', result.rows);
+
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Producto not found' });
+      console.log('Producto no encontrado para el código:', codigo);
+      return res.status(404).json({ error: 'Producto no encontrado' });
     }
-    
+
     res.json(result.rows[0]);
   } catch (err) {
-    console.error(err.message);
+    // Log del error
+    console.error('Error al obtener producto por código:', err.message);
     res.status(500).json({ error: 'Server error' });
   }
 });

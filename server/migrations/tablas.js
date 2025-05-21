@@ -8,9 +8,11 @@ async function migrateTablas() {
     console.log('Iniciando migración de tablas...');
     
     // Begin transaction
+    console.log('Iniciando transacción...');
     await client.query('BEGIN');
     
     // Categorías
+    console.log('Creando tabla "categorias"...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS categorias (
         id_categoria SERIAL PRIMARY KEY,
@@ -20,6 +22,7 @@ async function migrateTablas() {
     `);
     
     // Add category_id to productos if it doesn't exist
+    console.log('Verificando y agregando columna "categoria_id" a la tabla "productos" si no existe...');
     await client.query(`
       DO $$ 
       BEGIN
@@ -33,6 +36,7 @@ async function migrateTablas() {
     `);
     
     // Sucursales
+    console.log('Creando tabla "sucursales"...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS sucursales (
         id_sucursal SERIAL PRIMARY KEY,
@@ -44,6 +48,7 @@ async function migrateTablas() {
     `);
     
     // Stock
+    console.log('Creando tabla "stock"...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS stock (
         id SERIAL PRIMARY KEY,
@@ -55,6 +60,7 @@ async function migrateTablas() {
     `);
     
     // Pedidos
+    console.log('Creando tabla "pedidos"...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS pedidos (
         id_pedido SERIAL PRIMARY KEY,
@@ -65,6 +71,7 @@ async function migrateTablas() {
     `);
     
     // Pedidos detalle
+    console.log('Creando tabla "pedidos_detalle"...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS pedidos_detalle (
         id SERIAL PRIMARY KEY,
@@ -76,6 +83,7 @@ async function migrateTablas() {
     `);
     
     // Contacto
+    console.log('Creando tabla "contacto"...');
     await client.query(`
       CREATE TABLE IF NOT EXISTS contacto (
         id SERIAL PRIMARY KEY,
@@ -89,8 +97,10 @@ async function migrateTablas() {
     `);
     
     // Insert sample data
+    console.log('Verificando y agregando datos de ejemplo en la tabla "categorias"...');
     const categoriasCount = await client.query('SELECT COUNT(*) FROM categorias');
     if (parseInt(categoriasCount.rows[0].count) === 0) {
+      console.log('Insertando datos de ejemplo en "categorias"...');
       await client.query(`
         INSERT INTO categorias (nombre_categoria, descripcion) VALUES 
           ('Electrónica', 'Productos electrónicos y gadgets'),
@@ -99,8 +109,10 @@ async function migrateTablas() {
       `);
     }
     
+    console.log('Verificando y agregando datos de ejemplo en la tabla "sucursales"...');
     const sucursalesCount = await client.query('SELECT COUNT(*) FROM sucursales');
     if (parseInt(sucursalesCount.rows[0].count) === 0) {
+      console.log('Insertando datos de ejemplo en "sucursales"...');
       await client.query(`
         INSERT INTO sucursales (nombre, direccion, telefono, email) VALUES 
           ('Sucursal Centro', 'Av. Corrientes 1234, CABA', '11-1234-5678', 'centro@empresa.com'),
@@ -109,15 +121,18 @@ async function migrateTablas() {
     }
     
     // Commit transaction
+    console.log('Confirmando transacción...');
     await client.query('COMMIT');
     
     console.log('✅ Migración completada con éxito');
   } catch (error) {
     // Rollback on error
+    console.log('Realizando rollback debido a un error...');
     await client.query('ROLLBACK');
     console.error('❌ Error en la migración:', error);
     process.exit(1);
   } finally {
+    console.log('Liberando cliente de la conexión...');
     client.release();
     process.exit(0);
   }
