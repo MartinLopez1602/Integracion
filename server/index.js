@@ -36,7 +36,7 @@ const sucursalRoutes = require('./routes/sucursal');
 console.log('Ruta /api/sucursal cargada.');
 
 const pedidosRoutes = require('./routes/pedidos');
-console.log('Ruta /api/pedidos cargada.');
+console.log('Ruta /api/pedido cargada.');
 
 const contactoRoutes = require('./routes/contacto');
 console.log('Ruta /api/contacto cargada.');
