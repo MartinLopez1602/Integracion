@@ -15,9 +15,13 @@ export const CartProvider = ({ children }) => {
 
   // Guardar en localStorage cada vez que el carrito cambie
   useEffect(() => {
+    // Only save to localStorage without updating total state
     localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
     
-    // Calcular el total
+    // Calcular total
     const newTotal = cart.reduce((sum, item) => 
       sum + (item.precio_prod * item.quantity), 0);
     setTotal(newTotal);

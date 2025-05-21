@@ -26,6 +26,9 @@ console.log('Documentación Swagger disponible en /api-docs');
 // Rutas
 console.log('Cargando rutas...');
 
+const webpayRoutes = require('./routes/webpay');
+console.log('Ruta /api/webpay cargada.');
+
 const productoRoutes = require('./routes/producto');
 console.log('Ruta /api/producto cargada.');
 
@@ -55,6 +58,7 @@ app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/contacto', contactoRoutes);
 app.use('/api/moneda', monedaRoutes);
 app.use('/api/test', testRoutes);
+app.use('/api/webpay', webpayRoutes);
 
 // Ruta de prueba
 app.get('/api/test', (req, res) => {

@@ -6,11 +6,14 @@ import { CartProvider } from './context/CartContext';
 import Navbar from '../src/components/content/Navbar';
 
 //paginas
-import Productos from '../src/pages/content/Productos';
-import Pedidos from '../src/pages/content/Pedidos';
-import Contacto from '../src/pages/content/Contacto';
-import Home from '../src/pages/content/Home';
-import Carrito from '../src/pages/content/Carrito';
+import Productos from './pages/Productos';
+import Pedidos from './pages/Pedidos';
+import Contacto from './pages/Contacto';
+import Home from './pages/Home';
+import Carrito from './pages/Carrito';
+import PagoExitoso from './pages/PagoExitoso';
+import PagoFallido from './pages/PagoFallido';
+import WebpaySimulator from './pages/WebpaySimulator';
 
 // enruta las paginas, como se hace en Angular, copia y pega otro nomas y le cambias el nombre
 function App() {
@@ -23,6 +26,9 @@ function App() {
         <Route path="/pedidos" element={<Pedidos />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/carrito" element={<Carrito />} />
+        <Route path="/pago-exitoso" element={<PagoExitoso />} />
+        <Route path="/pago-fallido" element={<PagoFallido />} />
+        <Route path="/webpay-simulator" element={<WebpaySimulator />} />
       </Routes>
     </CartProvider>
   );

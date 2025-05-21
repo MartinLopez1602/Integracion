@@ -1,10 +1,43 @@
-import React, { useContext } from 'react';
-import { CartContext } from '../../context/CartContext';
+import React, { useContext, useState } from 'react';
+import { CartContext } from '../context/CartContext';
 import { Link } from 'react-router-dom';
-import '../css/Carrito.css';
+import axios from 'axios';
+import './Carrito.css';
 
 function Cart() {
   const { cart, total, removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const iniciarPago = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Reemplaza con la URL que te mostró ngrok
+      const ngrokUrl = 'https://b06e-186-10-139-156.ngrok-free.app';
+      
+      const buyOrder = `OC-${Date.now()}`;
+      const sessionId = `S-${Date.now()}`;
+      
+      // Mantén la URL del servidor local para la API
+      const response = await axios.post('http://localhost:5000/api/webpay/create', {
+        buyOrder,
+        sessionId,
+        amount: total,
+        // Usa la URL de ngrok para el callback
+        returnUrl: `${ngrokUrl}/api/webpay/commit`
+      });
+
+      window.location.href = response.data.url;
+      
+    } catch (err) {
+      console.error('Error al iniciar el pago:', err);
+      setError('Ocurrió un error al procesar el pago. Intente nuevamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (cart.length === 0) {
     return (
@@ -20,49 +53,57 @@ function Cart() {
     <div className="cart-container">
       <h2 className="cart-title">Tu Carrito de Compras</h2>
       
+      {/* Resto del código actual */}
       <div className="cart-items">
-        {cart.map(item => (
-          <div key={item.id_prod} className="cart-item">
-            <div className="cart-item-img">
-              <span className="cart-item-icon">🔨</span>
-            </div>
-            <div className="cart-item-details">
-              <h3>{item.nombre_prod}</h3>
-              <span className="cart-item-categoria">{item.tipo_producto || 'Sin categoría'}</span>
-            </div>
-            <div className="cart-item-price">
-              ${item.precio_prod}
-            </div>
-            <div className="cart-item-quantity">
-              <button 
-                onClick={() => updateQuantity(item.id_prod, item.quantity - 1)}
-                className="quantity-btn"
-              >-</button>
-              <span>{item.quantity}</span>
-              <button 
-                onClick={() => updateQuantity(item.id_prod, item.quantity + 1)}
-                className="quantity-btn"
-              >+</button>
-            </div>
-            <div className="cart-item-subtotal">
-              ${(item.precio_prod * item.quantity).toFixed(2)}
-            </div>
-            <button 
-              onClick={() => removeFromCart(item.id_prod)}
-              className="cart-item-remove"
-            >×</button>
-          </div>
-        ))}
+    {cart.map(item => (
+      <div key={item.id_prod} className="cart-item">
+        <div className="cart-item-img">
+          <span className="cart-item-icon">📦</span>
+        </div>
+        <div className="cart-item-details">
+          <h3>{item.nombre_prod}</h3>
+          <span className="cart-item-categoria">{item.tipo_producto || 'General'}</span>
+        </div>
+        <div className="cart-item-price">${item.precio_prod}</div>
+        <div className="cart-item-quantity">
+          <button 
+            className="quantity-btn" 
+            onClick={() => updateQuantity(item.id_prod, item.quantity - 1)}
+          >-</button>
+          <span>{item.quantity}</span>
+          <button 
+            className="quantity-btn" 
+            onClick={() => updateQuantity(item.id_prod, item.quantity + 1)}
+          >+</button>
+        </div>
+        <div className="cart-item-subtotal">
+          ${(item.precio_prod * item.quantity).toFixed(2)}
+        </div>
+        <button 
+          className="cart-item-remove" 
+          onClick={() => removeFromCart(item.id_prod)}
+        >×</button>
       </div>
+    ))}
+  </div>
       
       <div className="cart-summary">
         <div className="cart-total">
           <span>Total:</span>
           <span>${total.toFixed(2)}</span>
         </div>
+        
+        {error && <div className="error-message">{error}</div>}
+        
         <div className="cart-actions">
           <button onClick={clearCart} className="btn-secondary">Vaciar carrito</button>
-          <button className="btn-primary">Proceder al pago</button>
+          <button 
+            onClick={iniciarPago} 
+            className="btn-primary"
+            disabled={loading}
+          >
+            {loading ? 'Procesando...' : 'Pagar con WebPay'}
+          </button>
         </div>
       </div>
     </div>
