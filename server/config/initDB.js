@@ -223,13 +223,32 @@ async function initDB() {
       INSERT INTO tipo_producto (nombre_tipoprod, desc_tipoprod) VALUES
         ('Herramientas', 'Herramientas manuales y eléctricas'),
         ('Electricidad', 'Material eléctrico'),
-        ('Construcción', 'Materiales de obra')
+        ('Construcción', 'Materiales de obra'),
+        ('Pintura', 'Pinturas, esmaltes y accesorios'),
+        ('Jardinería', 'Herramientas y productos para jardín'),
+        ('Ferretería', 'Elementos generales: tornillos, pernos, etc.')
       ON CONFLICT DO NOTHING;
+
 
       INSERT INTO producto (nombre_prod, precio_prod, stock_prod, id_tipoprod) VALUES
         ('Taladro', 49990, 10, 1),
+        ('Destornillador eléctrico', 29990, 15, 1),
+        ('Caja de herramientas', 39990, 20, 1),
         ('Alargador', 7990, 25, 2),
-        ('Cemento', 12000, 50, 3)
+        ('Interruptor doble', 1990, 100, 2),
+        ('Portalámparas', 1290, 80, 2),
+        ('Cemento', 12000, 50, 3),
+        ('Arena gruesa', 6000, 100, 3),
+        ('Plancha OSB', 9500, 40, 3),
+        ('Esmalte sintético blanco', 15990, 30, 4),
+        ('Rodillo para pintar', 2990, 60, 4),
+        ('Pintura látex color crema', 13990, 25, 4),
+        ('Tijera de podar', 7990, 35, 5),
+        ('Manguera 15m', 12990, 40, 5),
+        ('Abono orgánico 5kg', 4990, 25, 5),
+        ('Caja de clavos 1"', 1990, 100, 6),
+        ('Pack de tornillos 2"', 2490, 120, 6),
+        ('Bisagra metálica 3"', 990, 70, 6)
       ON CONFLICT DO NOTHING;
 
       INSERT INTO tipo_empleado (nom_rol_emp, desc_rol_emp) VALUES
