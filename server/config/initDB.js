@@ -187,6 +187,15 @@ async function initDB() {
         precio_unit DECIMAL(10,2),
         precio_total DECIMAL(10,2)
       );
+
+      CREATE TABLE contacto (
+        id_contacto SERIAL PRIMARY KEY,
+        nombre_contacto VARCHAR(100) NOT NULL,
+        correo_contacto VARCHAR(150) NOT NULL,
+        mensaje_contacto TEXT NOT NULL,
+        fecha_contacto TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
     `);
     await client.query('COMMIT');
     console.log('✅ Migración de tablas completada con éxito.');
