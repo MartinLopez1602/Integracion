@@ -1,8 +1,9 @@
+const axios = require('axios');
 require('dotenv').config();
 const { Client, Pool } = require('pg');
 
 async function initDB() {
-  const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
+  const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, PIXABAY_API_KEY } = process.env; // PIXABAY no tiene uso, pero en caso de que se necesite otra API, solo se reemplaza esa, todo lo edmas esta puesto
 
   console.log('🔐 Verificando credenciales cargadas:');
   console.log('DB_USER:', DB_USER);
@@ -45,6 +46,7 @@ async function initDB() {
 
     const client = await pool.connect();
 
+
     console.log('🔧 Eliminando tablas existentes...');
     await client.query('BEGIN');
     await client.query(`
@@ -53,6 +55,7 @@ async function initDB() {
     `);
     await client.query('COMMIT');
     console.log('✅ Tablas eliminadas y esquema reiniciado.');
+
 
     console.log('🔧 Creando tablas nuevas...');
     await client.query('BEGIN');
@@ -86,7 +89,8 @@ async function initDB() {
         nombre_prod VARCHAR(100) NOT NULL,
         precio_prod DECIMAL(10, 2) NOT NULL,
         stock_prod INTEGER,
-        id_tipoprod INTEGER REFERENCES tipo_producto(id_tipoprod)
+        id_tipoprod INTEGER REFERENCES tipo_producto(id_tipoprod),
+        imagen_url TEXT
       );
 
       CREATE TABLE inventario (
