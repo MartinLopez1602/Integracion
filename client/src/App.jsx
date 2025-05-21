@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 
 //componentes reutilizables
-import Navbar from './components/Navbar';
+import Navbar from '../src/components/content/Navbar';
 
 //paginas
 import Productos from '../src/pages/content/Productos';

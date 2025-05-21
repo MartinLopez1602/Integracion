@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
-import { CartContext } from '../context/CartContext';
-import './Navbar.css';
+import { CartContext } from '../../context/CartContext';
+import '../css/Navbar.css';
 
 function Navbar() {
   const { itemCount } = useContext(CartContext);

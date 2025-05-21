@@ -1,7 +1,7 @@
 import React from 'react';
-import './HeroBanner.css';
-import bannerImg from '../assets/images/hero-ferreteria.jpg';
-import logoImg from '../assets/images/logo-ferreteria.png';
+import '../css/HeroBanner.css';
+import bannerImg from '../../assets/images/hero-ferreteria.jpg';
+import logoImg from '../../assets/images/logo-ferreteria.png';
 
 function HeroBanner() {
   return (
