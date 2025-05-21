@@ -67,6 +67,13 @@ app.use('/api/moneda', monedaRoutes);
 console.log('→ Cargando ruta /api/test');
 app.use('/api/test', testRoutes);
 
+// NO TOCAR, YA LO ARREGLE DEJENLO TAL CUAL NO HAGAN NADA O ME SUICIDO
+app.use((req, res) => {
+  console.log(`Ruta no encontrada: ${req.originalUrl}`);
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+
 // Servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Servidor backend en http://localhost:${PORT}`));
