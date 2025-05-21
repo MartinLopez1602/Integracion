@@ -1,25 +1,26 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import HeroBanner from './components/HeroBanner';
 
+//componentes reutilizables
+import Navbar from './components/Navbar';
+
+//paginas
 import Productos from './pages/Productos';
 import Pedidos from './pages/Pedidos';
 import Contacto from './pages/Contacto';
+import Home from './pages/Home';
 
+// enruta las paginas, como se hace en Angular, copia y pega otro nomas y le cambias el nombre
 function App() {
   return (
     <>
       <Navbar />
-      <HeroBanner />
-
-      <div style={{ padding: '20px' }}>
         <Routes>
-          <Route path="/" element={<Productos />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/productos" element={<Productos />} />
           <Route path="/pedidos" element={<Pedidos />} />
           <Route path="/contacto" element={<Contacto />} />
         </Routes>
-      </div>
     </>
   );
 }
