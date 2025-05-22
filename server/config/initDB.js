@@ -1,20 +1,26 @@
 const axios = require('axios');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, './.env') }); // Point to .env in config folder
 const { Client, Pool } = require('pg');
 
 async function initDB() {
-  const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, PIXABAY_API_KEY } = process.env; // PIXABAY no tiene uso, pero en caso de que se necesite otra API, solo se reemplaza esa, todo lo edmas esta puesto
+  const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, PIXABAY_API_KEY } = process.env;
 
   console.log('🔐 Verificando credenciales cargadas:');
+  console.log('DB_HOST:', DB_HOST); // Should show the RDS endpoint
   console.log('DB_USER:', DB_USER);
   console.log('DB_PASSWORD:', typeof DB_PASSWORD, DB_PASSWORD ? '[OK]' : '[VACÍA]');
 
+  // Add SSL configuration for AWS RDS
   const adminClient = new Client({
     host: DB_HOST,
     port: DB_PORT,
     user: DB_USER,
     password: DB_PASSWORD,
-    database: 'postgres'
+    database: 'postgres',
+    ssl: {
+      rejectUnauthorized: false
+    }
   });
 
   try {
@@ -41,7 +47,10 @@ async function initDB() {
       port: DB_PORT,
       user: DB_USER,
       password: DB_PASSWORD,
-      database: DB_NAME
+      database: DB_NAME,
+      ssl: {
+        rejectUnauthorized: false
+      }
     });
 
     const client = await pool.connect();

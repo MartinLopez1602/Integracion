@@ -3,22 +3,20 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const { Pool } = require('pg');
 
-// Verificación preventiva
-if (!process.env.DB_PASSWORD || typeof process.env.DB_PASSWORD !== 'string') {
-  console.error('❌ ERROR: DB_PASSWORD debe estar definido y ser un string válido.');
-  process.exit(1);
-}
-
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  host: process.env.DB_HOST,     // Endpoint de tu RDS, ej: integracion-db.abcdef.us-east-1.rds.amazonaws.com
+  port: process.env.DB_PORT,     // Por defecto 5432 para PostgreSQL
+  user: process.env.DB_USER,     // integracion
+  password: process.env.DB_PASSWORD, // Tu contraseña segura
+  database: 'postgres',  // integracion
+  ssl: {
+    rejectUnauthorized: false // Para desarrollo, en producción usa true con certificados válidos
+  }
 });
 
+
 pool.connect()
-  .then(() => console.log('✅ Conectado a PostgreSQL desde config/db.js'))
+  .then(() => console.log('✅ Conectado a PostgreSQL RDS'))
   .catch(err => console.error('❌ Error de conexión:', err));
 
 module.exports = pool;
