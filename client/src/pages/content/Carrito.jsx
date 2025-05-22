@@ -18,11 +18,11 @@ function Cart() {
       const sessionId = `S-${Date.now()}`;
       
       // Mantén la URL del servidor local para la API
-      const response = await axios.post('http://localhost:5000/api/webpay/create', {
+      const response = await axios.post('_http://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com/api/webpay/create', {
         buyOrder,
         sessionId,
         amount: total,
-        returnUrl : 'http://localhost:5000/api/webpay/commit',
+        returnUrl : '_http://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com/api/webpay/commit',
       });
 
       window.location.href = response.data.url;
