@@ -253,24 +253,24 @@ async function initDB() {
 
 
       INSERT INTO producto (nombre_prod, precio_prod, stock_prod, id_tipoprod, imagen_url) VALUES
-        ('Taladro', 49990, 10, 1, '/images/taladro.jpg'),
-        ('Destornillador eléctrico', 29990, 15, 1, '/images/destornillador-electrico.jpg'),
-        ('Caja de herramientas', 39990, 20, 1, '/images/caja-herramientas.jpg'),
-        ('Alargador', 7990, 25, 2, '/images/alargador.jpg'),
-        ('Interruptor doble', 1990, 100, 2, '/images/interruptor-doble.jpg'),
-        ('Portalámparas', 1290, 80, 2, '/images/portalamparas.jpg'),
-        ('Cemento', 12000, 50, 3, '/images/cemento.jpg'),
-        ('Arena gruesa', 6000, 100, 3, '/images/arena-gruesa.jpg'),
-        ('Plancha OSB', 9500, 40, 3, '/images/plancha-osb.jpg'),
-        ('Esmalte sintético blanco', 15990, 30, 4, '/images/esmalte-blanco.jpg'),
-        ('Rodillo para pintar', 2990, 60, 4, '/images/rodillo-pintar.jpg'),
-        ('Pintura látex color crema', 13990, 25, 4, '/images/pintura-latex-crema.jpg'),
-        ('Tijera de podar', 7990, 35, 5, '/images/tijera-podar.jpg'),
-        ('Manguera 15m', 12990, 40, 5, '/images/manguera-15m.jpg'),
-        ('Abono orgánico 5kg', 4990, 25, 5, '/images/abono-organico.jpg'),
-        ('Caja de clavos 1"', 1990, 100, 6, '/images/caja-clavos.jpg'),
-        ('Pack de tornillos 2"', 2490, 120, 6, '/images/pack-tornillos.jpg'),
-        ('Bisagra metálica 3"', 990, 70, 6, '/images/bisagra-metalica.jpg')
+        ('Taladro', 49990, 10, 1, '/images/Taladro.png'),
+        ('Destornillador eléctrico', 29990, 15, 1, '/images/Destornillador_electronico.png'),
+        ('Caja de herramientas', 39990, 20, 1, '/images/Caja_herramienta.png'),
+        ('Alargador', 7990, 25, 2, '/images/Alargador.png'),
+        ('Interruptor doble', 1990, 100, 2, '/images/Interruptor_doble.png'),
+        ('Portalámparas', 1290, 80, 2, '/images/Porta_lampara.png'),
+        ('Cemento', 12000, 50, 3, '/images/Cemento.png'),
+        ('Arena gruesa', 6000, 100, 3, '/images/Arena_gruesa.png'),
+        ('Plancha OSB', 9500, 40, 3, '/images/Plancha_osb.png'),
+        ('Esmalte sintético blanco', 15990, 30, 4, '/images/Esmalte_blanco.png'),
+        ('Rodillo para pintar', 2990, 60, 4, '/images/Rodillo_pintura.png'),
+        ('Pintura látex color crema', 13990, 25, 4, '/images/Pintura_latex.png'),
+        ('Tijera de podar', 7990, 35, 5, '/images/Tijera_podar.png'),
+        ('Manguera 15m', 12990, 40, 5, '/images/Manguera.png'),
+        ('Abono orgánico 5kg', 4990, 25, 5, '/images/Abono_organico.png'),
+        ('Caja de clavos 1"', 1990, 100, 6, '/images/Caja_clavos.png'),
+        ('Pack de tornillos 2"', 2490, 120, 6, '/images/Caja_tornillos.png'),
+        ('Bisagra metálica 3"', 990, 70, 6, '/images/Bisagra_metalica.png')
       ON CONFLICT DO NOTHING;
 
       INSERT INTO tipo_empleado (nom_rol_emp, desc_rol_emp) VALUES

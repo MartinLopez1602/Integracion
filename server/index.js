@@ -19,6 +19,9 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 console.log('Middlewares configurados.');
 
+//imagenes
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
 // Documentación Swagger
 console.log('Configurando documentación Swagger...');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));

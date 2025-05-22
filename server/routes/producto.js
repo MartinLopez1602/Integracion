@@ -18,10 +18,11 @@ router.get('/', async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT 
-        p.id_prod,
-        p.nombre_prod,
-        p.precio_prod,
-        p.stock_prod,
+        p.id_prod, 
+        p.nombre_prod, 
+        p.precio_prod, 
+        p.stock_prod, 
+        p.imagen_url, 
         tp.nombre_tipoprod AS tipo_producto
       FROM producto p
       LEFT JOIN tipo_producto tp ON p.id_tipoprod = tp.id_tipoprod
@@ -39,7 +40,7 @@ router.get('/', async (req, res) => {
 router.get('/destacados', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id_prod, nombre_prod, precio_prod, stock_prod
+      SELECT id_prod, nombre_prod, precio_prod, stock_prod, imagen_url
       FROM producto
       WHERE destacado_prod = true
       LIMIT 4

@@ -149,7 +149,15 @@ function Productos() {
             
             return (
               <div key={producto.id_prod} className="producto-card">
-                <img src={`http://localhost:5000${producto.imagen_url}`} alt={producto.nombre_prod} className="producto-imagen" />
+                <img 
+                  src={`http://localhost:5000/images/${producto.imagen_url ? producto.imagen_url.split('/').pop() : 'Alargador.png'}`} 
+                  alt={producto.nombre_prod} 
+                  className="producto-imagen" 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'http://localhost:5000/images/Alargador.png';
+                  }}
+                />
                 <div className="producto-info">
                   <h3>{producto.nombre_prod}</h3>
                   <span className="producto-categoria">{producto.tipo_producto || 'Sin categoría'}</span>

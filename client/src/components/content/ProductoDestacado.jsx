@@ -17,7 +17,15 @@ function FeaturedProducts() {
       <div className="featured-grid">
         {productos.map(p => (
           <div key={p.id_prod} className="featured-card">
-            <img src={`http://localhost:5000${p.imagen_url}`} alt={p.nombre_prod} />
+            <img 
+              src={`http://localhost:5000/images/${p.imagen_url ? p.imagen_url.split('/').pop() : 'Alargador.png'}`} 
+              alt={p.nombre_prod} 
+              className="producto-imagen" 
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = 'http://localhost:5000/images/Alargador.png';
+              }}
+            />
             <h4>{p.nombre_prod}</h4>
             <p>${p.precio_prod}</p>
           </div>
