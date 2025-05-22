@@ -15,7 +15,15 @@ console.log('Configuraciones de Swagger cargadas correctamente.');
 
 // Middlewares
 console.log('Configurando middlewares...');
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({
+  origin: [
+    'http://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com',
+    'https://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com', 
+    'http://localhost:3000'
+  ],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 console.log('Middlewares configurados.');
 
