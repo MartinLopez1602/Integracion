@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 
 //componentes reutilizables
-import Navbar from '../src/components/content/Navbar';
+import Layout from '../src/components/content/Layout';
 
 //paginas
 import Productos from '../src/pages/content/Productos';
@@ -19,16 +19,17 @@ import WebpaySimulator from '../src/pages/content/WebpaySimulator';
 function App() {
   return (
     <CartProvider>
-      <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/productos" element={<Productos />} />
-        <Route path="/pedidos" element={<Pedidos />} />
-        <Route path="/contacto" element={<Contacto />} />
-        <Route path="/carrito" element={<Carrito />} />
-        <Route path="/pago-exitoso" element={<PagoExitoso />} />
-        <Route path="/pago-fallido" element={<PagoFallido />} />
-        <Route path="/webpay-simulator" element={<WebpaySimulator />} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="productos" element={<Productos />} />
+          <Route path="pedidos" element={<Pedidos />} />
+          <Route path="contacto" element={<Contacto />} />
+          <Route path="carrito" element={<Carrito />} />
+          <Route path="pago-exitoso" element={<PagoExitoso />} />
+          <Route path="pago-fallido" element={<PagoFallido />} />
+          <Route path="webpay-simulator" element={<WebpaySimulator />} />
+        </Route>
       </Routes>
     </CartProvider>
   );
