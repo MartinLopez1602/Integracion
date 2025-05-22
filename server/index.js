@@ -63,7 +63,7 @@ const testRoutes = require('./routes/test');
 console.log('Ruta /api/test cargada.');
 
 // Registro de rutas
-app.use('/api/producto', productoRoutes);
+app.use('/api/productos', productoRoutes);
 app.use('/api/tipo-producto', tipoProductoRoutes);
 app.use('/api/sucursal', sucursalRoutes);
 app.use('/api/pedidos', pedidosRoutes);
