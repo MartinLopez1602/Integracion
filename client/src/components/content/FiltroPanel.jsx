@@ -23,8 +23,7 @@ function FiltroPanel({ tipos, setCategoriaSeleccionada }) {
           {tipos.map((tipo) => (
             <li key={tipo.id_tipoprod}>
               <label htmlFor={`categoria-${tipo.id_tipoprod}`}>
-                <input
-                  type="radio"
+                <input type="radio"
                   id={`categoria-${tipo.id_tipoprod}`}
                   name="categoria"
                   value={tipo.nombre_tipoprod}
@@ -87,7 +86,7 @@ function FiltroPanel({ tipos, setCategoriaSeleccionada }) {
         </label>
       </div>
 
-      {/* Filtro por Valoración (visual) */}
+      {/* Filtro por Valoración, funciona pero no filtra */}
       <div className="filtro-seccion">
         <h3>Valoración</h3>
         <div className="valoracion">

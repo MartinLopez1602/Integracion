@@ -21,9 +21,8 @@ function Contacto() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
+
     try {
-      // Llamada a la API con axios
       const response = await axios.post('http://localhost:5000/api/contacto', form);
       console.log('Respuesta del servidor:', response.data);
       setSuccess(true);
@@ -37,42 +36,39 @@ function Contacto() {
   };
 
   return (
-    <section className="contacto-container">
-      <div className="contacto-box">
-        <h2 className="contacto-title">Contáctanos</h2>
-        <p className="contacto-desc">¿Tienes dudas o necesitas ayuda? Completa el formulario y nos comunicaremos contigo.</p>
-        
-        {success && (
-          <div className="success-message">
-            ¡Gracias por contactarnos! Te responderemos pronto.
-          </div>
-        )}
-        
+    <div className="contact-wrapper">
+      <div className="contact-card">
+        <h2 className="contact-title">Contáctanos</h2>
+        <p className="contact-subtitle">Nos pondremos en contacto contigo lo antes posible</p>
+
+        {success && <div className="success-message">¡Gracias por tu mensaje! Te responderemos pronto.</div>}
         {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit} className="contacto-form">
-          <input
-            type="text"
-            name="nombre"
-            placeholder="Tu nombre"
-            value={form.nombre}
-            onChange={handleChange}
-            required
-          />
+
+        <form onSubmit={handleSubmit} className="contact-form">
+          <div className="form-row">
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Nombre"
+              value={form.nombre}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="tel"
+              name="telefono"
+              placeholder="Teléfono"
+              value={form.telefono}
+              onChange={handleChange}
+            />
+          </div>
           <input
             type="email"
             name="email"
-            placeholder="Tu correo"
+            placeholder="Correo electrónico"
             value={form.email}
             onChange={handleChange}
             required
-          />
-          <input
-            type="tel"
-            name="telefono"
-            placeholder="Tu teléfono"
-            value={form.telefono}
-            onChange={handleChange}
           />
           <textarea
             name="mensaje"
@@ -83,11 +79,13 @@ function Contacto() {
             required
           />
           <button type="submit" disabled={loading}>
-            {loading ? 'Enviando...' : 'Enviar mensaje'}
+            {loading ? 'Enviando...' : 'Enviar'}
           </button>
         </form>
+
+        <p className="contact-footer">También puedes llamarnos al <strong>333-33-33</strong></p>
       </div>
-    </section>
+    </div>
   );
 }
 
