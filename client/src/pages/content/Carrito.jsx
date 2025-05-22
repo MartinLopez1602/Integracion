@@ -83,14 +83,18 @@ function Cart() {
     ))}
   </div>
       
-      <div className="cart-summary">
+        <div className="cart-summary">
         <div className="cart-total">
           <span>Total:</span>
           <span>${total.toFixed(2)}</span>
         </div>
-        
+        <div className="cart-total">
+          <span>Envio:</span>
+          <span><del>$8990.00</del> <strong className="envio-gratis">GRATIS!</strong></span>
+        </div>
+
         {error && <div className="error-message">{error}</div>}
-        
+
         <div className="cart-actions">
           <button onClick={clearCart} className="btn-secondary">Vaciar carrito</button>
           <button 

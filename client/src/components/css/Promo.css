@@ -1,0 +1,44 @@
+.promo-section {
+    padding: 3rem 2rem;
+    background-color: #f8f8f8;
+    text-align: center;
+  }
+  
+  .promo-title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  .promo-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .promo-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    width: 300px;
+    transition: transform 0.2s;
+  }
+  
+  .promo-card:hover {
+    transform: scale(1.03);
+  }
+  
+  .promo-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+    color: #f39c12;
+  }
+  
+  .promo-card p {
+    font-size: 1rem;
+    color: #555;
+  }
+  

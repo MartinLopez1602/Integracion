@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import '../css/Productos.css';
 import { CartContext } from '../../context/CartContext';
+import FiltroPanel from '../../components/content/FiltroPanel';
 
 function Productos() {
   const [productos, setProductos] = useState([]);
@@ -34,7 +35,6 @@ function Productos() {
     fetchDatos();
   }, []);
 
-  //funcion para ver  si excede el stock en el carrito
   const isStockAvailable = (producto) => {
     const itemInCart = cart.find(item => item.id_prod === producto.id_prod);
     const quantityInCart = itemInCart ? itemInCart.quantity : 0;
@@ -42,53 +42,51 @@ function Productos() {
   };
 
   const handleAddToCart = (producto) => {
-    // Check if adding one more would exceed stock
     if (!isStockAvailable(producto)) {
-      // Show error message
-      setMensajes(prevMensajes => {
-        const errorMsg = {
-          id: `error-${producto.id_prod}`,
-          nombre: producto.nombre_prod,
-          error: true,
-          message: `No hay más unidades disponibles de este producto (Stock: ${producto.stock_prod})`
-        };
+      const errorId = `error-${producto.id_prod}`;
+      const errorMsg = {
+        id: errorId,
+        nombre: producto.nombre_prod,
+        error: true,
+        message: `No hay más unidades disponibles de este producto (Stock: ${producto.stock_prod})`
+      };
 
-        setTimeout(() => {
-          setMensajes(current => current.filter(m => m.id !== errorMsg.id));
-        }, 3000);
-
-        return [...prevMensajes, errorMsg];
+      setMensajes(prev => {
+        const existe = prev.find(m => m.id === errorId);
+        return existe ? prev : [...prev, errorMsg];
       });
+
+      setTimeout(() => {
+        setMensajes(current => current.filter(m => m.id !== errorId));
+      }, 3000);
       return;
     }
 
-    // If stock is available, proceed with adding to cart
     addToCart(producto);
 
-    setMensajes(prevMensajes => {
-      const existente = prevMensajes.find(m => m.id === producto.id_prod);
-
-      if (existente) {
-        return prevMensajes.map(m =>
-          m.id === producto.id_prod
-            ? { ...m, cantidad: m.cantidad + 1 }
-            : m
-        );
+    const successId = `success-${producto.id_prod}`;
+    setMensajes(prev => {
+      const idx = prev.findIndex(m => m.id === successId);
+      if (idx !== -1) {
+        const actualizado = [...prev];
+        actualizado[idx].cantidad += 1;
+        return actualizado;
       } else {
-        const nuevo = {
-          id: producto.id_prod,
-          nombre: producto.nombre_prod,
-          cantidad: 1,
-          error: false
-        };
-
-        setTimeout(() => {
-          setMensajes(current => current.filter(m => m.id !== producto.id_prod));
-        }, 3000);
-
-        return [...prevMensajes, nuevo];
+        return [
+          ...prev,
+          {
+            id: successId,
+            nombre: producto.nombre_prod,
+            cantidad: 1,
+            error: false
+          }
+        ];
       }
     });
+
+    setTimeout(() => {
+      setMensajes(current => current.filter(m => m.id !== successId));
+    }, 3000);
   };
 
   const handleCerrarMensaje = (id) => {
@@ -103,8 +101,15 @@ function Productos() {
     <div className="productos-wrapper">
       <div className="toast-container">
         {mensajes.map(mensaje => (
-          <div key={mensaje.id} className={`toast ${mensaje.error ? 'toast-error' : ''}`}>
-            <span>{mensaje.error ? mensaje.message : `${mensaje.nombre} agregado x${mensaje.cantidad}`}</span>
+          <div
+            key={mensaje.id}
+            className={`toast ${mensaje.error ? 'toast-error' : 'toast-success'}`}
+          >
+            <span>
+              {mensaje.error
+                ? mensaje.message
+                : `${mensaje.nombre} agregado x${mensaje.cantidad}`}
+            </span>
             <button className="toast-close" onClick={() => handleCerrarMensaje(mensaje.id)}>×</button>
           </div>
         ))}
@@ -113,79 +118,60 @@ function Productos() {
       <div className="productos-container">
         <h2 className="productos-title">Catálogo de Productos</h2>
 
-        <div className="filtro-categorias">
-          <label htmlFor="categoria">Filtrar por categoría:</label>
-          <select 
-            id="categoria" 
-            value={categoriaSeleccionada} 
-            onChange={(e) => setCategoriaSeleccionada(e.target.value)}
-          >
-            <option value="">Todas</option>
-            {tipos.map(tipo => (
-              <option key={tipo.id_tipoprod} value={tipo.nombre_tipoprod}>
-                {tipo.nombre_tipoprod}
-              </option>
-            ))}
-          </select>
+        <div className="filtros-barra-superior">
+          <FiltroPanel
+            tipos={tipos}
+            setCategoriaSeleccionada={setCategoriaSeleccionada}
+          />
         </div>
 
-        {loading && (
-          <div className="loading-message">
-            <p>Cargando productos...</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="error-message">
-            <p>{error}</p>
-          </div>
-        )}
+        {loading && <div className="loading-message"><p>Cargando productos...</p></div>}
+        {error && <div className="error-message"><p>{error}</p></div>}
 
         <div className="productos-grid">
           {productosFiltrados.map(producto => {
             const itemInCart = cart.find(item => item.id_prod === producto.id_prod);
             const quantityInCart = itemInCart ? itemInCart.quantity : 0;
             const remainingStock = producto.stock_prod - quantityInCart;
-            
+
             return (
-              <div key={producto.id_prod} className="producto-card">
-                <img 
-                  src={`http://localhost:5000/images/${producto.imagen_url ? producto.imagen_url.split('/').pop() : 'Alargador.png'}`} 
-                  alt={producto.nombre_prod} 
-                  className="producto-imagen" 
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'http://localhost:5000/images/Alargador.png';
-                  }}
-                />
-                <div className="producto-info">
-                  <h3>{producto.nombre_prod}</h3>
-                  <span className="producto-categoria">{producto.tipo_producto || 'Sin categoría'}</span>
-                  <div className="producto-details">
-                    <span className="producto-precio">${producto.precio_prod}</span>
-                    <span className={`producto-stock ${remainingStock <= 0 ? 'agotado' : remainingStock <= 5 ? 'bajo-stock' : ''}`}>
-                      Stock: <strong>{producto.stock_prod}</strong>
-                      {quantityInCart > 0 && <span> (En carrito: {quantityInCart})</span>}
-                    </span>
+              <button
+                key={producto.id_prod}
+                className="producto-card-button"
+                onClick={() => handleAddToCart(producto)}
+                disabled={remainingStock <= 0}
+              >
+                <div className="producto-card">
+                  <div className="producto-img-container">
+                    <img
+                      src={`http://localhost:5000/images/${producto.imagen_url ? producto.imagen_url.split('/').pop() : 'Alargador.png'}`}
+                      alt={producto.nombre_prod}
+                      className="producto-imagen"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'http://localhost:5000/images/Alargador.png';
+                      }}
+                    />
+                    <div className="hover-overlay">
+                      <p>Agregar<br />al<br />carrito</p>
+                    </div>
                   </div>
-                  <button 
-                    className={`producto-btn ${remainingStock <= 0 ? 'disabled' : ''}`}
-                    onClick={() => handleAddToCart(producto)}
-                    disabled={remainingStock <= 0}
-                  >
-                    {remainingStock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
-                  </button>
+                  <div className="producto-info">
+                    <h3>{producto.nombre_prod}</h3>
+                    <span className="producto-categoria">{producto.tipo_producto || 'Sin categoría'}</span>
+                    <div className="producto-details">
+                      <span className="producto-precio">${producto.precio_prod}</span>
+                      <span className={`producto-stock ${remainingStock <= 0 ? 'agotado' : remainingStock <= 5 ? 'bajo-stock' : ''}`}>
+                        Stock: <strong>{producto.stock_prod}</strong>
+                        {quantityInCart > 0 && <span> (En carrito: {quantityInCart})</span>}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
-
-        {productosFiltrados.length === 0 && !loading && !error && (
-          <div className="no-productos-message">
-            <p>No hay productos disponibles en esta categoría.</p>
-          </div>
-        )}
       </div>
     </div>
   );
