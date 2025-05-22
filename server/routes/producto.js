@@ -11,6 +11,25 @@ const pool = require('../config/db');
  *     responses:
  *       200:
  *         description: Lista de productos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id_prod:
+ *                     type: integer
+ *                   nombre_prod:
+ *                     type: string
+ *                   precio_prod:
+ *                     type: number
+ *                   stock_prod:
+ *                     type: integer
+ *                   imagen_url:
+ *                     type: string
+ *                   tipo_producto:
+ *                     type: string
  *       500:
  *         description: Error del servidor
  */
@@ -36,7 +55,35 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET productos destacados
+/**
+ * @swagger
+ * /api/productos/destacados:
+ *   get:
+ *     summary: Obtener productos destacados
+ *     tags: [Productos]
+ *     responses:
+ *       200:
+ *         description: Lista de productos destacados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id_prod:
+ *                     type: integer
+ *                   nombre_prod:
+ *                     type: string
+ *                   precio_prod:
+ *                     type: number
+ *                   stock_prod:
+ *                     type: integer
+ *                   imagen_url:
+ *                     type: string
+ *       500:
+ *         description: Error del servidor
+ */
 router.get('/destacados', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -52,7 +99,6 @@ router.get('/destacados', async (req, res) => {
   }
 });
 
-
 /**
  * @swagger
  * /api/productos/{codigo}:
@@ -63,12 +109,27 @@ router.get('/destacados', async (req, res) => {
  *       - in: path
  *         name: codigo
  *         required: true
- *         description: ID del producto
  *         schema:
  *           type: integer
+ *         description: ID del producto
  *     responses:
  *       200:
  *         description: Producto encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_prod:
+ *                   type: integer
+ *                 nombre_prod:
+ *                   type: string
+ *                 precio_prod:
+ *                   type: number
+ *                 stock_prod:
+ *                   type: integer
+ *                 tipo_producto:
+ *                   type: string
  *       404:
  *         description: Producto no encontrado
  *       500:
@@ -105,8 +166,6 @@ router.get('/:codigo', async (req, res) => {
   }
 });
 
-module.exports = router;
-
 /**
  * @swagger
  * /api/productos:
@@ -136,6 +195,21 @@ module.exports = router;
  *     responses:
  *       201:
  *         description: Producto creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_prod:
+ *                   type: integer
+ *                 nombre_prod:
+ *                   type: string
+ *                 precio_prod:
+ *                   type: number
+ *                 stock_prod:
+ *                   type: integer
+ *                 id_tipoprod:
+ *                   type: integer
  *       400:
  *         description: Datos inválidos
  *       500:
@@ -163,3 +237,5 @@ router.post('/', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+module.exports = router;

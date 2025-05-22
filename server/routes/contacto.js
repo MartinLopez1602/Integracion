@@ -14,24 +14,28 @@ const pool = require('../config/db');
  *       properties:
  *         nombre:
  *           type: string
- *           description: Name of the person
+ *           description: "Nombre de la persona que envía el mensaje"
+ *           example: "María López"
  *         email:
  *           type: string
  *           format: email
- *           description: Email address
+ *           description: "Correo electrónico de contacto"
+ *           example: "maria@example.com"
  *         telefono:
  *           type: string
- *           description: Phone number
+ *           description: "Número de teléfono de contacto (opcional)"
+ *           example: "+56912345678"
  *         mensaje:
  *           type: string
- *           description: Message content
+ *           description: "Contenido del mensaje"
+ *           example: "Hola, tengo una consulta sobre un producto."
  */
 
 /**
  * @swagger
  * /api/contacto:
  *   post:
- *     summary: Submit a contact message
+ *     summary: "Enviar un mensaje de contacto"
  *     tags: [Contacto]
  *     requestBody:
  *       required: true
@@ -41,16 +45,32 @@ const pool = require('../config/db');
  *             $ref: '#/components/schemas/Contacto'
  *     responses:
  *       200:
- *         description: Message submitted successfully
+ *         description: "Mensaje enviado correctamente"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Message submitted successfully"
+ *                 data:
+ *                   $ref: '#/components/schemas/Contacto'
  *       500:
- *         description: Server error
+ *         description: "Error interno del servidor"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Server error"
  */
 
-// POST contact message
 router.post('/', async (req, res) => {
   const { nombre, email, telefono, mensaje } = req.body;
 
-  // Agregar console.log para depuración
   console.log('Request body:', req.body);
 
   try {
@@ -58,7 +78,11 @@ router.post('/', async (req, res) => {
       'INSERT INTO contacto (nombre_contacto, correo_contacto, telefono_contacto, mensaje_contacto) VALUES ($1, $2, $3, $4) RETURNING *',
       [nombre, email, telefono, mensaje]
     );
-    res.status(200).json({ message: 'Message submitted successfully', data: result.rows[0] });
+
+    res.status(200).json({
+      message: 'Message submitted successfully',
+      data: result.rows[0],
+    });
   } catch (err) {
     console.error('Database error:', err.message);
     res.status(500).json({ error: 'Server error' });

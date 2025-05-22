@@ -16,32 +16,38 @@ const pool = require('../config/db');
  *           description: Nombre del producto
  *         stock_min:
  *           type: integer
- *           description: Stock mínimo en sucursal
+ *           description: Stock mínimo permitido en la sucursal
  *         estado_inventario:
  *           type: string
- *           description: Estado del inventario
+ *           description: "Estado actual del inventario (por ejemplo: 'óptimo', 'bajo', etc.)"
  */
 
 /**
  * @swagger
  * /api/sucursales/{id}/stock:
  *   get:
- *     summary: Obtener el inventario de una sucursal
+ *     summary: Obtener el inventario de una sucursal específica
  *     tags: [Sucursales]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID de la sucursal
  *         schema:
  *           type: integer
+ *         description: ID de la sucursal de la cual se desea obtener el inventario
  *     responses:
  *       200:
- *         description: Inventario de la sucursal
+ *         description: Inventario de la sucursal obtenido exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Stock'
  *       404:
- *         description: Sucursal no encontrada
+ *         description: No se encontró una sucursal con el ID proporcionado
  *       500:
- *         description: Error del servidor
+ *         description: Error interno del servidor al procesar la solicitud
  */
 
 router.get('/:id/stock', async (req, res) => {

@@ -13,26 +13,32 @@ const pool = require('../config/db');
  *       properties:
  *         id_tipoprod:
  *           type: integer
- *           description: ID del tipo de producto
+ *           description: ID único del tipo de producto
  *         nombre_tipoprod:
  *           type: string
  *           description: Nombre del tipo de producto
  *         desc_tipoprod:
  *           type: string
- *           description: Descripción del tipo de producto
+ *           description: Descripción detallada del tipo de producto
  */
 
 /**
  * @swagger
  * /api/tipo-producto:
  *   get:
- *     summary: Obtener todos los tipos de producto
+ *     summary: Obtener todos los tipos de productos
  *     tags: [TipoProducto]
  *     responses:
  *       200:
- *         description: Lista de tipos de producto
+ *         description: Lista completa de tipos de productos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/TipoProducto'
  *       500:
- *         description: Error del servidor
+ *         description: Error interno del servidor
  */
 router.get('/', async (req, res) => {
   try {
@@ -58,11 +64,15 @@ router.get('/', async (req, res) => {
  *             $ref: '#/components/schemas/TipoProducto'
  *     responses:
  *       201:
- *         description: Tipo de producto creado
+ *         description: Tipo de producto creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TipoProducto'
  *       400:
- *         description: Datos inválidos
+ *         description: El campo nombre_tipoprod es obligatorio
  *       500:
- *         description: Error del servidor
+ *         description: Error interno del servidor
  */
 router.post('/', async (req, res) => {
   const { nombre_tipoprod, desc_tipoprod } = req.body;
@@ -86,7 +96,7 @@ router.post('/', async (req, res) => {
  * @swagger
  * /api/tipo-producto/{id}:
  *   put:
- *     summary: Actualizar un tipo de producto
+ *     summary: Actualizar un tipo de producto por ID
  *     tags: [TipoProducto]
  *     parameters:
  *       - in: path
@@ -94,7 +104,7 @@ router.post('/', async (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID del tipo de producto
+ *         description: ID del tipo de producto a actualizar
  *     requestBody:
  *       required: true
  *       content:
@@ -103,13 +113,17 @@ router.post('/', async (req, res) => {
  *             $ref: '#/components/schemas/TipoProducto'
  *     responses:
  *       200:
- *         description: Tipo de producto actualizado
+ *         description: Tipo de producto actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/TipoProducto'
  *       400:
- *         description: Datos inválidos
+ *         description: Datos inválidos proporcionados
  *       404:
  *         description: Tipo de producto no encontrado
  *       500:
- *         description: Error del servidor
+ *         description: Error interno del servidor
  */
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
@@ -136,7 +150,7 @@ router.put('/:id', async (req, res) => {
  * @swagger
  * /api/tipo-producto/{id}:
  *   delete:
- *     summary: Eliminar un tipo de producto
+ *     summary: Eliminar un tipo de producto por ID
  *     tags: [TipoProducto]
  *     parameters:
  *       - in: path
@@ -144,14 +158,24 @@ router.put('/:id', async (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID del tipo de producto
+ *         description: ID del tipo de producto a eliminar
  *     responses:
  *       200:
- *         description: Tipo de producto eliminado
+ *         description: Tipo de producto eliminado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Tipo de producto eliminado
+ *                 tipo_producto:
+ *                   $ref: '#/components/schemas/TipoProducto'
  *       404:
  *         description: Tipo de producto no encontrado
  *       500:
- *         description: Error del servidor
+ *         description: Error interno del servidor
  */
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;

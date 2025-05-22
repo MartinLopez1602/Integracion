@@ -10,27 +10,32 @@ const axios = require('axios');
  *       properties:
  *         monto_original:
  *           type: number
- *           description: Original amount
+ *           description: "Monto original a convertir"
+ *           example: 100
  *         moneda_origen:
  *           type: string
- *           description: Source currency code
+ *           description: "Código de moneda de origen (ej: USD, EUR)"
+ *           example: "USD"
  *         monto_clp:
  *           type: number
- *           description: Converted amount in CLP
+ *           description: "Monto convertido en pesos chilenos (CLP)"
+ *           example: 87000
  *         tasa_conversion:
  *           type: number
- *           description: Exchange rate applied
+ *           description: "Tasa de cambio aplicada"
+ *           example: 870
  *         fecha:
  *           type: string
  *           format: date-time
- *           description: Date and time of conversion
+ *           description: "Fecha y hora de la conversión"
+ *           example: "2025-05-21T23:40:00.000Z"
  */
 
 /**
  * @swagger
  * /api/moneda/convertir:
  *   get:
- *     summary: Convert currency to CLP
+ *     summary: "Convertir una moneda extranjera a CLP (peso chileno)"
  *     tags: [Moneda]
  *     parameters:
  *       - in: query
@@ -38,27 +43,48 @@ const axios = require('axios');
  *         schema:
  *           type: number
  *         required: true
- *         description: Amount to convert
+ *         description: "Monto que se desea convertir"
+ *         example: 100
  *       - in: query
  *         name: moneda
  *         schema:
  *           type: string
  *         required: true
- *         description: Source currency code
+ *         description: "Código de la moneda de origen (ejemplo: USD, EUR, BRL)"
+ *         example: "USD"
  *     responses:
  *       200:
- *         description: Conversion result
+ *         description: "Resultado exitoso de la conversión"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ConversionResult'
  *       400:
- *         description: Invalid parameters
+ *         description: "Parámetros inválidos o faltantes"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Missing required query parameters: monto or moneda"
  *       500:
- *         description: Server error
+ *         description: "Error interno del servidor"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Server error"
  */
 
-// GET currency conversion
+
 router.get('/convertir', async (req, res) => {
   const { monto, moneda } = req.query;
 
-  // Agregar console.log para depuración
   console.log('Query parameters:', req.query);
 
   if (!monto || !moneda) {
