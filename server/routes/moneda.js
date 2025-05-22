@@ -35,97 +35,51 @@ const axios = require('axios');
  *     parameters:
  *       - in: query
  *         name: monto
- *         required: true
- *         description: Amount to convert
  *         schema:
  *           type: number
- *       - in: query
- *         name: de
  *         required: true
- *         description: Source currency code (USD, EUR, etc.)
+ *         description: Amount to convert
+ *       - in: query
+ *         name: moneda
  *         schema:
  *           type: string
+ *         required: true
+ *         description: Source currency code
  *     responses:
  *       200:
- *         description: Conversion successful
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ConversionResult'
+ *         description: Conversion result
  *       400:
  *         description: Invalid parameters
  *       500:
  *         description: Server error
  */
 
-// Helper function to map currency codes to mindicador.cl endpoints
-const getCurrencyEndpoint = (code) => {
-  const currencyMap = {
-    'USD': 'dolar',
-    'EUR': 'euro',
-    'UF': 'uf',
-    'UTM': 'utm',
-    'IPC': 'ipc',
-    'GBP': 'libra_cobre'
-  };
-  
-  return currencyMap[code] || null;
-};
-
-// GET /api/moneda/convertir - Convert currency to CLP
+// GET currency conversion
 router.get('/convertir', async (req, res) => {
+  const { monto, moneda } = req.query;
+
+  // Agregar console.log para depuración
+  console.log('Query parameters:', req.query);
+
+  if (!monto || !moneda) {
+    return res.status(400).json({ error: 'Missing required query parameters: monto or moneda' });
+  }
+
   try {
-    const { monto, de } = req.query;
-    
-    // Validate input
-    if (!monto || !de || isNaN(parseFloat(monto))) {
-      return res.status(400).json({ 
-        error: 'Parámetros inválidos. Se requiere monto (número) y moneda origen (de)' 
-      });
-    }
-    
-    // Convert to uppercase for API compatibility
-    const sourceCurrency = de.toUpperCase();
-    const amount = parseFloat(monto);
-    
-    // Get the appropriate endpoint for mindicador.cl
-    const currencyEndpoint = getCurrencyEndpoint(sourceCurrency);
-    
-    if (!currencyEndpoint) {
-      return res.status(400).json({ 
-        error: `La moneda ${sourceCurrency} no está soportada. Monedas disponibles: USD, EUR, UF, UTM, IPC, GBP` 
-      });
-    }
-    
-    // Fetch latest exchange rates from mindicador.cl
-    const response = await axios.get(`https://mindicador.cl/api/${currencyEndpoint}`);
-    
-    // Check if API returned data correctly
-    if (!response.data || !response.data.serie || !response.data.serie[0]) {
-      throw new Error(`No se encontraron tasas de conversión para ${sourceCurrency} a CLP`);
-    }
-    
-    // Get the CLP exchange rate (mindicador.cl returns CLP per unit of the foreign currency)
-    const exchangeRate = response.data.serie[0].valor;
-    
-    // Calculate converted amount
-    const convertedAmount = amount * exchangeRate;
-    
-    // Return result
+    const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/${moneda}`);
+    const tasaConversion = response.data.rates.CLP;
+    const montoCLP = monto * tasaConversion;
+
     res.json({
-      monto_original: amount,
-      moneda_origen: sourceCurrency,
-      monto_clp: convertedAmount,
-      tasa_conversion: exchangeRate,
-      fecha: response.data.serie[0].fecha || new Date().toISOString()
+      monto_original: parseFloat(monto),
+      moneda_origen: moneda,
+      monto_clp: montoCLP,
+      tasa_conversion: tasaConversion,
+      fecha: new Date().toISOString(),
     });
-    
   } catch (err) {
-    console.error('Error en conversión de moneda:', err.message);
-    res.status(500).json({ 
-      error: 'Error al realizar la conversión de moneda', 
-      detalle: err.message 
-    });
+    console.error('Error fetching exchange rate:', err.message);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
