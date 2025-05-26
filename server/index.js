@@ -28,8 +28,10 @@ app.get('/health', (req, res) => {
 console.log('Configurando middlewares...');
 app.use(cors({
   origin: [
-    'http://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/',
+    'http://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com',
+    'https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com',,
     'https://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com', 
+    'https://prod.d27clnoc1pnl0o.amplifyapp.com',
     'http://localhost:3000'
   ],
   credentials: true,
