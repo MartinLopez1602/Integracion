@@ -8,7 +8,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com',
+        url: 'http://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/',
         description: 'Servidor de producción en AWS'
       },
       {

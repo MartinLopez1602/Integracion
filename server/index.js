@@ -13,11 +13,22 @@ const swaggerOptions = require('./config/swagger');
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 console.log('Configuraciones de Swagger cargadas correctamente.');
 
+// Agregar ANTES del middleware app.use((req, res) => {...}) que maneja las rutas no encontradas
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok',
+    timestamp: new Date(),
+    version: require('./package.json').version,
+    env: process.env.NODE_ENV
+  });
+});
+
+
 // Middlewares
 console.log('Configurando middlewares...');
 app.use(cors({
   origin: [
-    'http://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com',
+    'http://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/',
     'https://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com', 
     'http://localhost:3000'
   ],
@@ -63,6 +74,7 @@ const testRoutes = require('./routes/test');
 console.log('Ruta /api/test cargada.');
 
 // Registro de rutas
+app.use('/api/producto', productoRoutes);  
 app.use('/api/productos', productoRoutes);
 app.use('/api/tipo-producto', tipoProductoRoutes);
 app.use('/api/sucursal', sucursalRoutes);
@@ -73,16 +85,23 @@ app.use('/api/test', testRoutes);
 app.use('/api/webpay', webpayRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// Ruta de prueba
-app.get('/api/test', (req, res) => {
-  console.log('Solicitud recibida en /api/test');
-  res.json({ message: 'API funcionando correctamente' });
-});
 
 // NO TOCAR, YA LO ARREGLE DEJENLO TAL CUAL NO HAGAN NADA O ME SUICIDO
 app.use((req, res) => {
   console.log(`Ruta no encontrada: ${req.originalUrl}`);
   res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('ERROR NO CAPTURADO! 💥', error.message);
+  console.error(error.stack);
+  // No cerrar el servidor, solo registrar el error
+});
+
+process.on('unhandledRejection', (error) => {
+  console.error('PROMESA RECHAZADA NO MANEJADA! 💥', error.message);
+  console.error(error.stack);
+  // No cerrar el servidor, solo registrar el error
 });
 
 // Levantar servidor

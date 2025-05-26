@@ -16,6 +16,7 @@ const pool = require('../config/db');
  */
 router.get('/', async (req, res) => {
   try {
+    console.log('⚠️ Intentando obtener productos...');
     const result = await pool.query(`
       SELECT 
         p.id_prod, 
@@ -26,13 +27,16 @@ router.get('/', async (req, res) => {
         tp.nombre_tipoprod AS tipo_producto
       FROM producto p
       LEFT JOIN tipo_producto tp ON p.id_tipoprod = tp.id_tipoprod
-    `);
+    `, [], 'productos');
 
-    console.log('Productos obtenidos:', result.rows);
+    console.log(`✅ Productos obtenidos: ${result.rows.length}`);
     res.json(result.rows);
   } catch (err) {
-    console.error('Error al obtener productos:', err.message);
-    res.status(500).json({ error: 'Server error' });
+    console.error('❌ ERROR AL OBTENER PRODUCTOS:', err.message);
+    
+    // Responder con datos de respaldo en caso de error
+    const fallbackData = require('../config/db').getFallbackData('productos');
+    res.json(fallbackData);
   }
 });
 
