@@ -5,6 +5,11 @@ import { CartContext } from '../../context/CartContext';
 import { API_BASE_URL } from '../../config/api';
 
 
+// Crear una instancia personalizada de axios con mayor tiempo de espera
+const axiosInstance = axios.create({
+  timeout: 30000, // 30 segundos
+});
+
 function Productos() {
   const [productos, setProductos] = useState([]);
   const [tipos, setTipos] = useState([]);
@@ -18,16 +23,33 @@ function Productos() {
     const fetchDatos = async () => {
       try {
         setLoading(true);
+        console.log('Intentando cargar datos desde:', `${API_BASE_URL}/api/productos`);
+        
         const [productosRes, tiposRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/api/productos`),
-          axios.get(`${API_BASE_URL}/api/tipo-producto`)
+          axiosInstance.get(`${API_BASE_URL}/api/productos`),
+          axiosInstance.get(`${API_BASE_URL}/api/tipo-producto`)
         ]);
+        
+        console.log('Datos recibidos productos:', productosRes.data.length);
         setProductos(productosRes.data);
         setTipos(tiposRes.data);
         setError(null);
       } catch (err) {
         console.error('Error al cargar productos o tipos:', err);
-        setError('Error al cargar los productos. Por favor intenta de nuevo más tarde.');
+        console.log('API_BASE_URL actual:', API_BASE_URL);
+        console.log('Detalles del error:', err.message, err.code, err.config?.url);
+        
+        // Manejo de errores más descriptivo
+        let errorMsg = 'Error al cargar los productos. ';
+        if (err.code === 'ECONNABORTED') {
+          errorMsg += 'Tiempo de espera agotado. La conexión con el servidor es lenta.';
+        } else if (err.response) {
+          errorMsg += `El servidor respondió con error: ${err.response.status}`;
+        } else if (err.request) {
+          errorMsg += 'No se recibió respuesta del servidor.';
+        }
+        
+        setError(errorMsg);
       } finally {
         setLoading(false);
       }
@@ -35,7 +57,7 @@ function Productos() {
 
     fetchDatos();
   }, []);
-
+  
   //funcion para ver  si excede el stock en el carrito
   const isStockAvailable = (producto) => {
     const itemInCart = cart.find(item => item.id_prod === producto.id_prod);
