@@ -24,7 +24,7 @@ function Contacto() {
     
     try {
       // Llamada a la API con axios
-      const response = await axios.post('https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/api/contacto', form);
+      const response = await axios.post(`${API_BASE_URL}/api/contacto`, form);
       console.log('Respuesta del servidor:', response.data);
       setSuccess(true);
       setForm({ nombre: '', email: '', telefono: '', mensaje: '' });

@@ -20,7 +20,7 @@ function WebpaySimulator() {
 
     try {
       // First save the order
-      const estadosResponse = await axios.get('https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/api/pedidos/estados');
+      const estadosResponse = await axios.get(`${API_BASE_URL}/api/pedidos/estados`);
       const estadoId = estadosResponse.data?.length > 0 ? estadosResponse.data[0].id_estado_ped : 1;
       
       const pedidoData = {
@@ -34,11 +34,11 @@ function WebpaySimulator() {
       };
       
       // Save the order first
-      await axios.post('https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/api/pedidos', pedidoData);
+      await axios.post(`${API_BASE_URL}/api/pedidos`, pedidoData);
       
       // CHANGE THIS PART - Instead of using Axios, redirect the browser window directly
       // This will follow the server-side redirect properly
-      window.location.href = `https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/api/webpay/commit?token_ws=${token}`;
+      window.location.href = `${API_BASE_URL}/api/webpay/commit?token_ws=${token}`;
       
       // Remove the navigate call since the redirect will happen from the server
       // navigate(`/pago-exitoso?token=${token}`);

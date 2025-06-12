@@ -17,8 +17,8 @@ function Productos() {
       try {
         setLoading(true);
         const [productosRes, tiposRes] = await Promise.all([
-          axios.get('https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/api/producto'),
-          axios.get('https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/api/tipo-producto')
+          axios.get(`${API_BASE_URL}/api/productos`),
+          axios.get(`${API_BASE_URL}/api/tipo-producto`)
         ]);
         setProductos(productosRes.data);
         setTipos(tiposRes.data);
@@ -150,12 +150,12 @@ function Productos() {
             return (
               <div key={producto.id_prod} className="producto-card">
                 <img 
-                  src={`https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/images/${producto.imagen_url ? producto.imagen_url.split('/').pop() : 'Alargador.png'}`} 
+                  src={`${API_BASE_URL}/images/${producto.imagen_url ? producto.imagen_url.split('/').pop() : 'Alargador.png'}`} 
                   alt={producto.nombre_prod} 
                   className="producto-imagen" 
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = 'https://ferremas-app-env-2.eba-dqgxevfn.us-east-1.elasticbeanstalk.com/images/Alargador.png';
+                    e.target.src = `${API_BASE_URL}/images/Alargador.png`;
                   }}
                 />
                 <div className="producto-info">

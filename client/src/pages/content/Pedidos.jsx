@@ -11,7 +11,7 @@ function Pedidos() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://ferremas-app-env.eba-cmwanbjq.us-east-1.elasticbeanstalk.com/api/pedidos');
+        const response = await axios.get(`${API_BASE_URL}/api/pedidos`);
         setOrdersGroups(response.data);
         setError(null);
       } catch (err) {
