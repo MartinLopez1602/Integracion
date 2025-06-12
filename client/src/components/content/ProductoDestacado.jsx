@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../css/ProductoDestacado.css';
+import { API_BASE_URL } from '../../config/api';
+
 
 function FeaturedProducts() {
   const [productos, setProductos] = useState([]);

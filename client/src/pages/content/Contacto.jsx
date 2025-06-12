@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../css/Contacto.css';
+import { API_BASE_URL } from '../../config/api';
+
 
 function Contacto() {
   const [form, setForm] = useState({

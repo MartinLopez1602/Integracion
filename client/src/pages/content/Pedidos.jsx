@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/Pedidos.css';
+import { API_BASE_URL } from '../../config/api';
+
 
 function Pedidos() {
   const [ordersGroups, setOrdersGroups] = useState([]);

@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/WebpaySimulator.css';
 import { CartContext } from '../../context/CartContext'; 
+import { API_BASE_URL } from '../../config/api';
+
 
 function WebpaySimulator() {
   const location = useLocation();

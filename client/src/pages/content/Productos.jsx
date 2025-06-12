@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import '../css/Productos.css';
 import { CartContext } from '../../context/CartContext';
+import { API_BASE_URL } from '../../config/api';
+
 
 function Productos() {
   const [productos, setProductos] = useState([]);
