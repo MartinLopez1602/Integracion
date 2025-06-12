@@ -3,6 +3,8 @@ import { CartContext } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../css/Carrito.css';
+import { API_BASE_URL } from '../../config/api';
+
 
 function Cart() {
   const { cart, total, removeFromCart, updateQuantity, clearCart } = useContext(CartContext);
