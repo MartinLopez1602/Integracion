@@ -54,6 +54,9 @@ console.log('Ruta /api/moneda cargada.');
 const testRoutes = require('./routes/test');
 console.log('Ruta /api/test cargada.');
 
+const authRoutes = require('./auth/auth.routes');
+console.log('Ruta /api/auth cargada.');
+
 // Registro de rutas
 app.use('/api/producto', productoRoutes);
 app.use('/api/tipo-producto', tipoProductoRoutes);
@@ -63,6 +66,7 @@ app.use('/api/contacto', contactoRoutes);
 app.use('/api/moneda', monedaRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/webpay', webpayRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Ruta de prueba
