@@ -1,7 +1,7 @@
 // server/auth/auth.controller.js
 const bcrypt  = require('bcrypt');
 const jwt     = require('jsonwebtoken');
-const { pool }       = require('../config/db');
+const pool       = require('../config/db');
 const { genAccess, genRefresh } = require('./token');
 
 /* ---------- Registro cliente ---------- */

@@ -10,17 +10,19 @@
 
 .logo {
   font-size: 32px;
+  flex: 0 0 auto;
   font-weight: 700;
   color: #222;
   text-decoration: none;
   font-family: 'Poetsen One', sans-serif;
+  margin-right: 20px;
 }
 
 
 .nav-links {
   list-style: none;
   display: flex;
-  justify-content: flex-end; /* ⬅️ Alinea a la derecha */
+  justify-content: center;
   gap: 35px;
   margin: 0;
   padding: 0;
@@ -73,4 +75,9 @@
   justify-content: center;
   font-size: 12px;
   font-weight: bold;
+}
+
+.login-action {
+  flex: 0 0 auto;
+  font-weight: 600;
 }
