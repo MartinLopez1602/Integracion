@@ -13,17 +13,6 @@ const swaggerOptions = require('./config/swagger');
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 console.log('Configuraciones de Swagger cargadas correctamente.');
 
-// Agregar ANTES del middleware app.use((req, res) => {...}) que maneja las rutas no encontradas
-app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'ok',
-    timestamp: new Date(),
-    version: require('./package.json').version,
-    env: process.env.NODE_ENV
-  });
-});
-
-
 // Middlewares
 console.log('Configurando middlewares...');
 app.use(cors({
@@ -48,6 +37,45 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 console.log('Configurando documentación Swagger...');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 console.log('Documentación Swagger disponible en /api-docs');
+
+// Health check endpoint - ultra simple para AWS
+app.get('/health', (req, res) => {
+  console.log('Health check solicitado:', new Date().toISOString());
+  res.status(200).send('OK');
+});
+
+// Health check más completo en otra ruta
+app.get('/health/detailed', async (req, res) => {
+  try {
+    const pool = require('./config/db').pool;
+    await pool.query('SELECT 1');
+    
+    res.status(200).json({ 
+      status: 'ok',
+      timestamp: new Date(),
+      version: require('./package.json').version,
+      env: process.env.NODE_ENV,
+      database: 'connected',
+      port: process.env.PORT || 8080
+    });
+  } catch (error) {
+    console.error('Health check failed:', error);
+    res.status(500).json({ 
+      status: 'error',
+      timestamp: new Date(),
+      error: error.message 
+    });
+  }
+});
+
+// Endpoint raíz
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    message: 'Ferremas API is running',
+    status: 'ok',
+    timestamp: new Date()
+  });
+});
 
 // Rutas
 console.log('Cargando rutas...');
@@ -86,27 +114,26 @@ app.use('/api/contacto', contactoRoutes);
 app.use('/api/moneda', monedaRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/webpay', webpayRoutes);
-app.use('/images', express.static(path.join(__dirname, 'images')));
 
-
-// NO TOCAR, YA LO ARREGLE DEJENLO TAL CUAL NO HAGAN NADA O ME SUICIDO
+// Middleware para rutas no encontradas (debe ir al final)
 app.use((req, res) => {
   console.log(`Ruta no encontrada: ${req.originalUrl}`);
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
+// Manejo de errores
 process.on('uncaughtException', (error) => {
   console.error('ERROR NO CAPTURADO! 💥', error.message);
   console.error(error.stack);
-  // No cerrar el servidor, solo registrar el error
 });
 
 process.on('unhandledRejection', (error) => {
   console.error('PROMESA RECHAZADA NO MANEJADA! 💥', error.message);
   console.error(error.stack);
-  // No cerrar el servidor, solo registrar el error
 });
 
 // Levantar servidor
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Servidor backend en http://localhost:${PORT}`));
+const PORT = process.env.PORT || 8080; 
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Servidor backend en http://0.0.0.0:${PORT}`);
+});
