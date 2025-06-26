@@ -23,9 +23,13 @@ Documentación: Swagger UI para APIs
 
  Backend
  - Express 5
- - PostgreSQL (node-postgres)
+ - PostgreSQL (node-postgres, pg)
  - Swagger UI/JSDoc
  - dotenv para variables de entorno
+ - bcrypt para encriptación de contraseñas
+ - jsonwebtoken para autenticación JWT
+ - swagger-ui-express para documentación de la API
+ - cors para manejo de CORS
 
 
 ⚙️ Requisitos Previos

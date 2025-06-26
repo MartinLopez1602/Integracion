@@ -4,16 +4,17 @@ import './index.css';
 import { BrowserRouter } from 'react-router-dom'; // Habilita el enrutamiento, como en Angular :D
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import AuthProvider from './context/AuthContext'; // Importa el proveedor de autenticación
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>        {/* Aquí envuelves tu app con el router */}
+    <AuthProvider>
+    <BrowserRouter>
       <App />
     </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>
 );
-
-// No necesario, pero  para medir el rendimiento de la aplicación, por si acaso
 reportWebVitals();
 
