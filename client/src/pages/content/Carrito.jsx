@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { CartContext } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/Carrito.css';
 
 function Cart() {
@@ -18,11 +19,11 @@ function Cart() {
       const sessionId = `S-${Date.now()}`;
       
       // Mantén la URL del servidor local para la API
-      const response = await axios.post('http://localhost:5000/api/webpay/create', {
+      const response = await axios.post(buildApiUrl('/api/webpay/create'), {
         buyOrder,
         sessionId,
         amount: total,
-        returnUrl : 'http://localhost:5000/api/webpay/commit',
+        returnUrl: buildApiUrl("/api/webpay/commit")
       });
 
       window.location.href = response.data.url;

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/ProductoDestacado.css';
 
 function FeaturedProducts() {
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/producto/destacados')
+    axios.get(buildApiUrl("/api/producto/destacados"))
       .then(res => setProductos(res.data))
       .catch(err => console.error('Error al cargar productos destacados:', err));
   }, []);
@@ -18,10 +19,10 @@ function FeaturedProducts() {
         {productos.map(p => (
           <div key={p.id_prod} className="featured-card">
             <img 
-              src={`http://localhost:5000/images/${p.imagen_url?.split('/').pop() || 'Alargador.png'}`} 
+              src={buildImageUrl(`${p.imagen_url?.split('/').pop() || 'Alargador.png'}`)} 
               alt={p.nombre_prod} 
               className="producto-imagen" 
-              onError={(e) => { e.target.onerror = null; e.target.src = 'http://localhost:5000/images/Alargador.png'; }}
+              onError={(e) => { e.target.onerror = null; e.target.src = buildImageUrl('Alargador.png'); }}
             />
             <h4>{p.nombre_prod}</h4>
             <p>${p.precio_prod}</p>

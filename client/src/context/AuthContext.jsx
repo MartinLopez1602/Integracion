@@ -1,6 +1,7 @@
 // src/context/AuthContext.jsx
 import { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { buildApiUrl } from '../config/config';
 
 export const AuthContext = createContext();
 
@@ -13,13 +14,13 @@ export default function AuthProvider({ children }) {
     if (!token) return;
 
     axios
-      .get('http://localhost:5000/api/auth/me', {
+      .get(buildApiUrl('/api/auth/me'), {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(async (res) => {
         // Obtener información completa del usuario
         try {
-          const profileRes = await axios.get('http://localhost:5000/api/auth/profile', {
+          const profileRes = await axios.get(buildApiUrl("/api/auth/profile"), {
             headers: { Authorization: `Bearer ${token}` },
           });
           setUser({ ...res.data, ...profileRes.data });

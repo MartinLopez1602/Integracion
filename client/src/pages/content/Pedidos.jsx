@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/Pedidos.css';
 
 function Pedidos() {
@@ -11,7 +12,7 @@ function Pedidos() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/pedidos');
+        const response = await axios.get(buildApiUrl('/api/pedidos'));
         setOrdersGroups(response.data);
         setError(null);
       } catch (err) {

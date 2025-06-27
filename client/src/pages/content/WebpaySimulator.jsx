@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/WebpaySimulator.css';
 import { CartContext } from '../../context/CartContext'; 
 
@@ -20,7 +21,7 @@ function WebpaySimulator() {
 
     try {
       // First save the order
-      const estadosResponse = await axios.get('http://localhost:5000/api/pedidos/estados');
+      const estadosResponse = await axios.get(buildApiUrl('/api/pedidos/estados'));
       const estadoId = estadosResponse.data?.length > 0 ? estadosResponse.data[0].id_estado_ped : 1;
       
       const pedidoData = {
@@ -34,11 +35,11 @@ function WebpaySimulator() {
       };
       
       // Save the order first
-      await axios.post('http://localhost:5000/api/pedidos', pedidoData);
+      await axios.post(buildApiUrl("/api/pedidos"), pedidoData);
       
       // CHANGE THIS PART - Instead of using Axios, redirect the browser window directly
       // This will follow the server-side redirect properly
-      window.location.href = `http://localhost:5000/api/webpay/commit?token_ws=${token}`;
+      window.location.href = buildApiUrl(`/api/webpay/commit?token_ws=${token}`);
       
       // Remove the navigate call since the redirect will happen from the server
       // navigate(`/pago-exitoso?token=${token}`);
