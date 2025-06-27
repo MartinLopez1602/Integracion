@@ -38,7 +38,10 @@ function Navbar() {
           
           {/* Solo mostrar Pedidos si el usuario es admin */}
           {user && user.rol === 'admin' && (
-            <li><NavLink to="/pedidos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Pedidos</NavLink></li>
+            <>
+              <li><NavLink to="/pedidos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Pedidos</NavLink></li>
+              <li><NavLink to="/gestion-productos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Gestión Productos</NavLink></li>
+            </>
           )}
           
           <li><NavLink to="/contacto"  className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Contacto</NavLink></li>
