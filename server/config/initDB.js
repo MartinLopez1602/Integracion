@@ -1,5 +1,7 @@
 const axios = require('axios');
-require('dotenv').config();
+const path = require('path');
+const bcrypt = require('bcrypt'); 
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const { Client, Pool } = require('pg');
 
 async function initDB() {
@@ -24,7 +26,7 @@ async function initDB() {
     const result = await adminClient.query(
       `SELECT 1 FROM pg_database WHERE datname = $1`,
       [DB_NAME]
-    );
+    );``
 
     if (result.rows.length === 0) {
       console.log(`📦 La base de datos "${DB_NAME}" no existe. Creándola...`);
@@ -205,14 +207,17 @@ async function initDB() {
       );
 
       CREATE TABLE administrador (
-        id_admin SERIAL PRIMARY KEY,
-        usr_admin TEXT NOT NULL,
-        pass_hash_admin TEXT NOT NULL
+        id_admin INTEGER PRIMARY KEY REFERENCES usuario(id_usuario) ON DELETE CASCADE
       );
 
     `);
     await client.query('COMMIT');
     console.log('✅ Migración de tablas completada con éxito.');
+
+    // 👈 Hashear contraseña antes de insertar
+    const hashedAdminPass = await bcrypt.hash('123', 12);
+    console.log('🔐 Contraseña hasheada para administradores');
+  
 
     console.log('📥 Insertando datos iniciales...');
     await client.query('BEGIN');
@@ -296,15 +301,31 @@ async function initDB() {
       INSERT INTO cliente (id_usuario, id_medpago, direccion_cli, run_cli, dv_run_cli) VALUES
         (2, 1, 'Calle Falsa 123', 12345678, '9')
       ON CONFLICT DO NOTHING;
-
-      INSERT INTO administrador (usr_admin, pass_hash_admin) VALUES
-        ('Lukas', '123'),
-        ('Franco', '123'),
-        ('Martin', '123')
-      ON CONFLICT DO NOTHING;
-
+      
       UPDATE producto SET destacado_prod = true WHERE id_prod IN (1, 2);
     `);
+    // Insertar cada administrador por separado
+    await client.query(
+      'INSERT INTO usuario (correo_user, pass_hash_user, nombre_user, apellido_user, apellido2_user) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING',
+      ['lukas@admin.com', hashedAdminPass, 'Lukas', 'Admin', 'Sistema']
+    );
+    await client.query(
+      'INSERT INTO usuario (correo_user, pass_hash_user, nombre_user, apellido_user, apellido2_user) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING',
+      ['franco@admin.com', hashedAdminPass, 'Franco', 'Admin', 'Sistema']
+    );
+    await client.query(
+      'INSERT INTO usuario (correo_user, pass_hash_user, nombre_user, apellido_user, apellido2_user) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING',
+      ['martin@admin.com', hashedAdminPass, 'Martin', 'Admin', 'Sistema']
+    );
+    // Insertar registros de administrador
+    await client.query(`
+      INSERT INTO administrador (id_admin) VALUES
+        ((SELECT id_usuario FROM usuario WHERE correo_user = 'lukas@admin.com')),
+        ((SELECT id_usuario FROM usuario WHERE correo_user = 'franco@admin.com')),
+        ((SELECT id_usuario FROM usuario WHERE correo_user = 'martin@admin.com'))
+      ON CONFLICT DO NOTHING;
+    `);
+
     await client.query('COMMIT');
     console.log('✅ Datos insertados correctamente.');
 

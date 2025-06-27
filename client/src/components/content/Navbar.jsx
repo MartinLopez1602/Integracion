@@ -28,7 +28,12 @@ function Navbar() {
         {/* --- enlaces principales --- */}
         <ul className="nav-links">
           <li><NavLink to="/productos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Productos</NavLink></li>
-          <li><NavLink to="/pedidos"   className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Pedidos</NavLink></li>
+          
+          {/* Solo mostrar Pedidos si el usuario es admin */}
+          {user && user.rol === 'admin' && (
+            <li><NavLink to="/pedidos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Pedidos</NavLink></li>
+          )}
+          
           <li><NavLink to="/contacto"  className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Contacto</NavLink></li>
           <li>
             <NavLink to="/carrito" className={({ isActive }) => isActive ? 'nav-link active cart-link' : 'nav-link cart-link'}>
@@ -48,7 +53,8 @@ function Navbar() {
             <span className="nav-link" style={{ cursor: 'pointer' }} onClick={logout}>
               Cerrar Sesión
             </span>
-          </div>)}
+          </div>
+        )}
       </nav>
       {/* Modales de Login y Registro */}
       <Login isOpen={loginOpen} onClose={() => setLoginOpen(false)} onSwitch={() => {setLoginOpen(false);setRegOpen(true);}}/>

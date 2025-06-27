@@ -69,19 +69,117 @@ exports.login = async (req, res) => {
   });
 };
 
+/* ---------- Obtener Perfil ---------- */
+exports.getProfile = async (req, res) => {
+  try {
+    const userId = req.user.sub;
+
+    const { rows } = await pool.query(
+      'SELECT nombre_user, apellido_user, apellido2_user, correo_user FROM usuario WHERE id_usuario = $1',
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const user = rows[0];
+    res.json({
+      nombre: user.nombre_user,
+      apellido: user.apellido_user,
+      apellido2: user.apellido2_user,
+      correo: user.correo_user
+    });
+  } catch (error) {
+    console.error('Error al obtener perfil:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+/* ---------- Actualizar Perfil ---------- */
+exports.updateProfile = async (req, res) => {
+  try {
+    const { nombre, apellido, apellido2 } = req.body;
+    const userId = req.user.sub;
+
+    const { rows } = await pool.query(
+      `UPDATE usuario 
+       SET nombre_user = $1, apellido_user = $2, apellido2_user = $3 
+       WHERE id_usuario = $4 
+       RETURNING nombre_user, apellido_user, apellido2_user, correo_user`,
+      [nombre, apellido, apellido2, userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const user = rows[0];
+    res.json({
+      message: 'Perfil actualizado correctamente',
+      user: {
+        nombre: user.nombre_user,
+        apellido: user.apellido_user,
+        apellido2: user.apellido2_user,
+        correo: user.correo_user
+      }
+    });
+  } catch (error) {
+    console.error('Error al actualizar perfil:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+/* ---------- Cambiar Contraseña ---------- */
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.sub;
+
+    // Verificar contraseña actual
+    const { rows } = await pool.query(
+      'SELECT pass_hash_user FROM usuario WHERE id_usuario = $1',
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    const user = rows[0];
+    const isValidPassword = await bcrypt.compare(currentPassword, user.pass_hash_user);
+
+    if (!isValidPassword) {
+      return res.status(400).json({ error: 'Contraseña actual incorrecta' });
+    }
+
+    // Hashear nueva contraseña
+    const hashedNewPassword = await bcrypt.hash(newPassword, 12);
+
+    // Actualizar contraseña
+    await pool.query(
+      'UPDATE usuario SET pass_hash_user = $1 WHERE id_usuario = $2',
+      [hashedNewPassword, userId]
+    );
+
+    res.json({ message: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    console.error('Error al cambiar contraseña:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
 /* ---------- Refresh ---------- */
 exports.refreshToken = (req, res) => {
   const { refresh } = req.body;
-  if (!refresh) return res.status(400).json({ error: 'Falta refresh token' });
+  if (!refresh) return res.status(401).json({ error: 'Refresh token requerido' });
 
   try {
     const decoded = jwt.verify(refresh, process.env.JWT_REFRESH_SECRET);
-    const access  = genAccess({
-      sub: decoded.sub,
-      correo: decoded.correo,
-      rol: decoded.rol,
+    const payload = { sub: decoded.sub, correo: decoded.correo, rol: decoded.rol };
+    res.json({
+      access: genAccess(payload),
     });
-    res.json({ access });
   } catch {
     res.status(401).json({ error: 'Refresh token inválido' });
   }

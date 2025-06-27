@@ -16,8 +16,18 @@ export default function AuthProvider({ children }) {
       .get('http://localhost:5000/api/auth/me', {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then(res => setUser(res.data))
-      .catch(() => setUser(null));            // token expirado
+      .then(async (res) => {
+        // Obtener información completa del usuario
+        try {
+          const profileRes = await axios.get('http://localhost:5000/api/auth/profile', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUser({ ...res.data, ...profileRes.data });
+        } catch {
+          setUser(res.data);
+        }
+      })
+      .catch(() => setUser(null));
   }, []);
 
   /* 2⃣  Cerrar sesión */
