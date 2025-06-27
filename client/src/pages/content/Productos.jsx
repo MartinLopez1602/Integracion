@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/Productos.css';
 import { CartContext } from '../../context/CartContext';
 import FiltroPanel from '../../components/content/FiltroPanel';
@@ -18,8 +19,8 @@ function Productos() {
       try {
         setLoading(true);
         const [productosRes, tiposRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/producto'),
-          axios.get('http://localhost:5000/api/tipo-producto')
+          axios.get(buildApiUrl('/api/producto')),
+          axios.get(buildApiUrl('/api/tipo-producto'))
         ]);
         setProductos(productosRes.data);
         setTipos(tiposRes.data);
@@ -144,12 +145,12 @@ function Productos() {
                 <div className="producto-card">
                   <div className="producto-img-container">
                     <img
-                      src={`http://localhost:5000/images/${producto.imagen_url ? producto.imagen_url.split('/').pop() : 'Alargador.png'}`}
+                      src={buildImageUrl(producto.imagen_url ? producto.imagen_url.split("/").pop() : "Alargador.png")}
                       alt={producto.nombre_prod}
                       className="producto-imagen"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = 'http://localhost:5000/images/Alargador.png';
+                        e.target.src = buildImageUrl('Alargador.png');
                       }}
                     />
                     <div className="hover-overlay">

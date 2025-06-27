@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/Contacto.css';
 
 const Contacto = () => {
@@ -15,7 +16,7 @@ const Contacto = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post('http://localhost:5000/api/contacto', form);
+      const response = await axios.post(buildApiUrl("/api/contacto"), form);
       console.log('Respuesta del servidor:', response.data);
       setSuccess(true);
       setForm({ nombre: '', email: '', telefono: '', mensaje: '' });

@@ -10,6 +10,7 @@ import Layout from '../src/components/content/Layout';
 //paginas
 import Productos from '../src/pages/content/Productos';
 import Pedidos from '../src/pages/content/Pedidos';
+import GestionProductos from '../src/pages/content/GestionProductos'; 
 import Contacto from '../src/pages/content/Contacto';
 import Home from '../src/pages/content/Home';
 import Carrito from '../src/pages/content/Carrito';
@@ -29,6 +30,11 @@ function App() {
           <Route path="pedidos" element={
             <ProtectedRoute allowedRoles={['admin']}>
               <Pedidos />
+            </ProtectedRoute>
+          } />
+          <Route path="gestion-productos" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <GestionProductos />
             </ProtectedRoute>
           } />
           <Route path="contacto" element={<Contacto />} />

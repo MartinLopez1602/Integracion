@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/Login.css';
 
 export default function Register({ isOpen, onClose, onSwitch = () => {} }) {
@@ -29,7 +30,7 @@ export default function Register({ isOpen, onClose, onSwitch = () => {} }) {
       setLoading(true);
       setError(null);
       try {
-        await axios.post('http://localhost:5000/api/auth/register', {
+        await axios.post(buildApiUrl("/api/auth/register"), {
           correo:   form.email,
           password: form.password,
           nombre:   form.nombre,

@@ -1,0 +1,349 @@
+.gestion-productos {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Playpen Sans Deva', cursive;
+}
+
+.gestion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.gestion-header h1 {
+  font-size: 32px;
+  color: #333;
+  margin: 0;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: #666;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.alert-error {
+  background-color: #fee;
+  color: #c53030;
+  border: 1px solid #fed7d7;
+}
+
+.alert-success {
+  background-color: #f0fff4;
+  color: #38a169;
+  border: 1px solid #9ae6b4;
+}
+
+/* Estilos para filtros expandidos */
+.filtros-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.filtros-row {
+  display: grid;
+  grid-template-columns: 2fr repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 15px;
+}
+
+.filtro-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filtro-group label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 14px;
+}
+
+.filtro-input,
+.filtro-select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.filtro-input:focus,
+.filtro-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filtros-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resultados-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.productos-table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.productos-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.productos-table th {
+  background-color: #f8fafc;
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.productos-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.productos-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+.producto-agotado {
+  background-color: #fef2f2 !important;
+}
+
+.producto-agotado:hover {
+  background-color: #fee2e2 !important;
+}
+
+.product-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  background-color: #f3f4f6;
+}
+
+.agotado-text {
+  display: block;
+  font-size: 12px;
+  color: #dc2626;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.destacado-indicator {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 16px;
+  color: #f59e0b;
+}
+
+.stock-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stock-number {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.stock-legend {
+  display: flex;
+  gap: 8px;
+  margin-left: 8px;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-item .badge {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  padding: 0;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-secondary {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.btn-secondary {
+  background-color: #6b7280;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #4b5563;
+}
+
+.btn-danger {
+  background-color: #dc2626;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
+}
+
+.btn-warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #d97706;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.btn-outline:hover {
+  background-color: #f3f4f6;
+}
+
+.toggle-destacado {
+  font-size: 12px;
+  padding: 6px 10px;
+  min-width: 110px;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.no-products {
+  padding: 40px 20px;
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}
+
+@media (max-width: 1200px) {
+  .filtros-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gestion-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .filtros-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .filtros-actions {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .productos-table-container {
+    overflow-x: auto;
+  }
+
+  .productos-table {
+    min-width: 900px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .stock-legend {
+    flex-direction: column;
+    gap: 4px;
+  }
+}

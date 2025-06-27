@@ -3,15 +3,22 @@ import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { CartContext } from '../../context/CartContext';
 import { AuthContext } from '../../context/AuthContext';
-import Login    from './Login';
+import Login from './Login';
 import Register from './Registro';
+import ConfirmLogout from './ConfirmLogout';
 import '../css/Navbar.css';
 
 function Navbar() {
-  const { itemCount }          = useContext(CartContext);
-  const { user, logout }       = useContext(AuthContext);
+  const { itemCount } = useContext(CartContext);
+  const { user, logout } = useContext(AuthContext);
   const [loginOpen, setLoginOpen] = useState(false);
-  const [regOpen,   setRegOpen]   = useState(false);
+  const [regOpen, setRegOpen] = useState(false);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    setLogoutConfirmOpen(false);
+  };
 
   return (
     <>
@@ -31,7 +38,10 @@ function Navbar() {
           
           {/* Solo mostrar Pedidos si el usuario es admin */}
           {user && user.rol === 'admin' && (
-            <li><NavLink to="/pedidos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Pedidos</NavLink></li>
+            <>
+              <li><NavLink to="/pedidos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Pedidos</NavLink></li>
+              <li><NavLink to="/gestion-productos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Gestión Productos</NavLink></li>
+            </>
           )}
           
           <li><NavLink to="/contacto"  className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Contacto</NavLink></li>
@@ -50,15 +60,33 @@ function Navbar() {
           /* usuario autenticado */
           <div className="auth-links">
             <NavLink to="/perfil" className="nav-link">Perfil</NavLink>
-            <span className="nav-link" style={{ cursor: 'pointer' }} onClick={logout}>
+            <span 
+              className="nav-link" 
+              style={{ cursor: 'pointer' }} 
+              onClick={() => setLogoutConfirmOpen(true)}
+            >
               Cerrar Sesión
             </span>
           </div>
         )}
       </nav>
-      {/* Modales de Login y Registro */}
-      <Login isOpen={loginOpen} onClose={() => setLoginOpen(false)} onSwitch={() => {setLoginOpen(false);setRegOpen(true);}}/>
-      <Register isOpen={regOpen} onClose={() => setRegOpen(false)} onSwitch={() => {setRegOpen(false);setLoginOpen(true);}}/>
+      
+      {/* Modales de Login, Registro y Confirmación de Logout */}
+      <Login 
+        isOpen={loginOpen} 
+        onClose={() => setLoginOpen(false)} 
+        onSwitch={() => {setLoginOpen(false);setRegOpen(true);}}
+      />
+      <Register 
+        isOpen={regOpen} 
+        onClose={() => setRegOpen(false)} 
+        onSwitch={() => {setRegOpen(false);setLoginOpen(true);}}
+      />
+      <ConfirmLogout
+        isOpen={logoutConfirmOpen}
+        onClose={() => setLogoutConfirmOpen(false)}
+        onConfirm={handleLogout}
+      />
     </>
   );
 }

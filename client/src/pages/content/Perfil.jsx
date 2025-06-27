@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
+import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/Perfil.css';
 
 function Perfil() {
@@ -42,7 +43,7 @@ function Perfil() {
     try {
       const token = localStorage.getItem('access');
       const response = await axios.put(
-        'http://localhost:5000/api/auth/profile',
+        buildApiUrl('/api/auth/profile'),
         {
           nombre: form.nombre,
           apellido: form.apellido,
@@ -85,7 +86,7 @@ function Perfil() {
     try {
       const token = localStorage.getItem('access');
       await axios.put(
-        'http://localhost:5000/api/auth/password',
+        buildApiUrl('/api/auth/password'),
         {
           currentPassword: form.currentPassword,
           newPassword: form.newPassword
