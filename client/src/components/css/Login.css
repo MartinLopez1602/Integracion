@@ -153,3 +153,12 @@
   font-weight: 500;
 }
 .login-link:hover { text-decoration: underline; }
+
+/* Estilos específicos para el modal de confirmación de logout */
+.confirm-logout .btn:first-child:hover {
+  background-color: #b91c1c !important;
+}
+
+.confirm-logout .btn:last-child:hover {
+  background-color: #4b5563 !important;
+}
