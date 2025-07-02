@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggered on version tags like v1.0.0
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies and build
+      run: |
+        npm ci
+        cd client && npm ci && npm run build
+        cd ../server && npm ci
+    
+    - name: Run tests
+      run: |
+        npm run test:client
+        npm run test:server
+      env:
+        CI: true
+        NODE_ENV: test
+    
+    - name: Generate changelog
+      id: changelog
+      run: |
+        # Obtener el tag anterior
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+        echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+        
+        # Generar changelog
+        echo "## 📝 Changelog" > CHANGELOG.md
+        echo "" >> CHANGELOG.md
+        git log --pretty=format:"- %s (%h)" $PREVIOUS_TAG..HEAD >> CHANGELOG.md
+    
+    - name: Create deployment package
+      run: |
+        mkdir -p release
+        cp -r client/build release/client
+        cp -r server release/
+        cp package.json release/
+        tar -czf release-${{ github.ref_name }}.tar.gz -C release .
+    
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body_path: CHANGELOG.md
+        draft: false
+        prerelease: false
+    
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./release-${{ github.ref_name }}.tar.gz
+        asset_name: release-${{ github.ref_name }}.tar.gz
+        asset_content_type: application/gzip

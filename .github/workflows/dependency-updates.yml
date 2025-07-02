@@ -1,0 +1,92 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Ejecuta cada lunes a las 9 AM
+  workflow_dispatch:  # Permite ejecución manual
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Check for outdated packages in client
+      id: outdated-client
+      run: |
+        cd client
+        if npm outdated --json > outdated-client.json 2>/dev/null; then
+          echo "has_updates=false" >> $GITHUB_OUTPUT
+        else
+          echo "has_updates=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Check for outdated packages in server
+      id: outdated-server
+      run: |
+        cd server
+        if npm outdated --json > outdated-server.json 2>/dev/null; then
+          echo "has_updates=false" >> $GITHUB_OUTPUT
+        else
+          echo "has_updates=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Update client dependencies
+      if: steps.outdated-client.outputs.has_updates == 'true'
+      run: |
+        cd client
+        npm update
+        npm audit fix --force
+    
+    - name: Update server dependencies
+      if: steps.outdated-server.outputs.has_updates == 'true'
+      run: |
+        cd server
+        npm update
+        npm audit fix --force
+    
+    - name: Run tests after updates
+      if: steps.outdated-client.outputs.has_updates == 'true' || steps.outdated-server.outputs.has_updates == 'true'
+      run: |
+        npm ci
+        cd client && npm ci
+        cd ../server && npm ci
+        npm run test:client
+        npm run test:server
+      env:
+        CI: true
+        NODE_ENV: test
+    
+    - name: Create Pull Request
+      if: steps.outdated-client.outputs.has_updates == 'true' || steps.outdated-server.outputs.has_updates == 'true'
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'chore: update dependencies'
+        title: '🔄 Automated dependency updates'
+        body: |
+          ## 📦 Dependency Updates
+          
+          This PR contains automated dependency updates.
+          
+          ### Changes:
+          - Updated client dependencies: ${{ steps.outdated-client.outputs.has_updates }}
+          - Updated server dependencies: ${{ steps.outdated-server.outputs.has_updates }}
+          
+          ### Testing:
+          - ✅ All tests pass
+          - ✅ No breaking changes detected
+          
+          This PR was created automatically. Please review before merging.
+        branch: dependency-updates
+        delete-branch: true

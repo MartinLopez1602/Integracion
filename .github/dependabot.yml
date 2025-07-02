@@ -1,0 +1,77 @@
+version: 2
+updates:
+  # Dependencias del cliente React
+  - package-ecosystem: "npm"
+    directory: "/client"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "martinraul"  # Cambia por tu username
+    assignees:
+      - "martinraul"  # Cambia por tu username
+    commit-message:
+      prefix: "client"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "client"
+    
+  # Dependencias del servidor
+  - package-ecosystem: "npm"
+    directory: "/server"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "martinraul"  # Cambia por tu username
+    assignees:
+      - "martinraul"  # Cambia por tu username
+    commit-message:
+      prefix: "server"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "server"
+    
+  # Dependencias del root
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "martinraul"  # Cambia por tu username
+    assignees:
+      - "martinraul"  # Cambia por tu username
+    commit-message:
+      prefix: "root"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "root"
+    
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "martinraul"  # Cambia por tu username
+    assignees:
+      - "martinraul"  # Cambia por tu username
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"

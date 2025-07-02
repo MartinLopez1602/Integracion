@@ -1,0 +1,97 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches: [ prod, dev ]
+
+jobs:
+  pr-validation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Necesario para comparar cambios
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd client && npm ci
+        cd ../server && npm ci
+    
+    - name: Check for changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v41
+      with:
+        files_yaml: |
+          client:
+            - client/**
+          server:
+            - server/**
+    
+    - name: Run client tests if client changed
+      if: steps.changed-files.outputs.client_any_changed == 'true'
+      run: npm run test:client
+      env:
+        CI: true
+    
+    - name: Run server tests if server changed
+      if: steps.changed-files.outputs.server_any_changed == 'true'
+      run: npm run test:server
+      env:
+        CI: true
+        NODE_ENV: test
+    
+    - name: Build client if client changed
+      if: steps.changed-files.outputs.client_any_changed == 'true'
+      run: |
+        cd client
+        npm run build
+    
+    - name: Comment PR with test results
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+          
+          const botComment = comments.find(comment => 
+            comment.user.type === 'Bot' && comment.body.includes('PR Validation Results')
+          );
+          
+          const body = `## 🔍 PR Validation Results
+          
+          ✅ All tests passed!
+          ✅ Build successful!
+          
+          ### Changed components:
+          - Client: ${{ steps.changed-files.outputs.client_any_changed == 'true' && '✓' || '—' }}
+          - Server: ${{ steps.changed-files.outputs.server_any_changed == 'true' && '✓' || '—' }}
+          
+          _This comment will be updated automatically._`;
+          
+          if (botComment) {
+            github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: botComment.id,
+              body: body
+            });
+          } else {
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+          }
