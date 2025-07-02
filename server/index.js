@@ -6,8 +6,6 @@ const swaggerUi = require('swagger-ui-express');
 const app = require('./app');
 const path = require('path');
 
-const app = express();
-
 // Configuración Swagger
 console.log('Cargando configuraciones de Swagger...');
 const swaggerOptions = require('./config/swagger');
