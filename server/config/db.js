@@ -18,8 +18,11 @@ const pool = new Pool({
   database: process.env.DB_NAME
 });
 
-pool.connect()
-  .then(() => console.log('✅ Conectado a PostgreSQL desde config/db.js'))
-  .catch(err => console.error('❌ Error de conexión:', err));
+// Solo conectar y mostrar logs si no estamos en modo test
+if (process.env.NODE_ENV !== 'test') {
+  pool.connect()
+    .then(() => console.log('✅ Conectado a PostgreSQL desde config/db.js'))
+    .catch(err => console.error('❌ Error de conexión:', err));
+}
 
 module.exports = pool;
