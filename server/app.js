@@ -21,7 +21,7 @@ if (!isTestMode) console.log('Configurando middlewares...');
 // CORS configurado correctamente para local y producción
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://frontend-d6bb3n9tk-lukelektros-projects.vercel.app' // NO CAMBIAR, SOLO SI SE ACTUALIZA EL DOMINIO
+  'https://frontend-d6bb3n9tk-lukelektros-projects.vercel.app' // NO CAMBIAR, SOLO SI SE ACTUALIZA EL DOMINIO aa
 ];
 
 app.use(cors({
