@@ -13,19 +13,28 @@ function createDbConnection() {
     require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
   }
 
-  // Si estamos en CI-CD, usar mock (detectado por variable CI o ausencia de DB_PASSWORD en test)
-  if (process.env.CI || (process.env.NODE_ENV === 'test' && !process.env.DB_PASSWORD)) {
-    console.log('🔧 Using mock database for CI-CD environment');
+  // Solo usar mock en testing local, NO en producción
+  if (process.env.NODE_ENV === 'test' && !process.env.CI) {
+    console.log('🔧 Using mock database for local testing');
     return require('./db.test.js');
   }
 
-  // Verificación preventiva
+  // En producción, usar las variables de Railway
+  if (process.env.NODE_ENV === 'production') {
+    console.log('🚀 Using Railway production database');
+    const pool = new Pool({
+      host: process.env.POSTGRES_HOST || process.env.DB_HOST,
+      port: process.env.DB_PORT || 5432,
+      user: process.env.POSTGRES_USER || process.env.DB_USER,
+      password: process.env.POSTGRES_PASSWORD || process.env.DB_PASSWORD,
+      database: process.env.POSTGRES_DATABASE || process.env.DB_NAME,
+      ssl: { rejectUnauthorized: false }
+    });
+    return pool;
+  }
+
+  // Verificación preventiva para desarrollo
   if (!process.env.DB_PASSWORD || typeof process.env.DB_PASSWORD !== 'string') {
-    // En lugar de salir, usar mock en CI-CD
-    if (process.env.NODE_ENV === 'test') {
-      console.log('🔧 DB_PASSWORD not found, using mock database for testing');
-      return require('./db.test.js');
-    }
     console.error('❌ ERROR: DB_PASSWORD debe estar definido y ser un string válido.');
     process.exit(1);
   }
