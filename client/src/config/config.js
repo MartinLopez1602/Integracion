@@ -1,7 +1,7 @@
 // para cambiar la urls en base en que enviroment
 const configs = {
   development: 'http://localhost:5000',
-  production: 'integracion-integracion.up.railway.app'
+  production: 'https://integracion-integracion.up.railway.app'
 };
 
 // Asegúrate de que NODE_ENV esté correctamente establecido durante el build
