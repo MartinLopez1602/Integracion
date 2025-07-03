@@ -19,13 +19,16 @@ function FeaturedProducts() {
   const fetchProductosDestacados = async () => {
     try {
       const response = await axios.get(buildApiUrl("/api/producto/destacados"));
-      setProductos(response.data);
+      // Previene que productos sea null si el backend no tiene niuna wea
+      setProductos(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       console.error('Error al cargar productos destacados:', err);
+      setProductos([]); // previene la wea con los null
     } finally {
       setLoading(false);
     }
   };
+  
 
   if (loading) {
     return (
@@ -53,25 +56,29 @@ function FeaturedProducts() {
     <section className="featured-section">
       <h2 className="featured-title">Productos Destacados</h2>
       <div className="featured-grid">
-        {productos.map(p => (
-          <div key={p.id_prod} className="featured-card">
-            <div className="featured-badge">⭐ Destacado</div>
-            <img 
-              src={buildImageUrl(`${p.imagen_url?.split('/').pop() || 'Alargador.png'}`)} 
-              alt={p.nombre_prod} 
-              className="producto-imagen" 
-              onError={(e) => { 
-                e.target.onerror = null; 
-                e.target.src = buildImageUrl('Alargador.png'); 
-              }}
-            />
-            <div className="featured-info">
-              <h4>{p.nombre_prod}</h4>
-              <p className="featured-price">${p.precio_prod}</p>
-              <p className="featured-stock">Stock: {p.stock_prod}</p>
+        {Array.isArray(productos) && productos.length > 0 ? (
+          productos.map(p => (
+            <div key={p.id_prod} className="featured-card">
+              <div className="featured-badge">⭐ Destacado</div>
+              <img 
+                src={buildImageUrl(`${p.imagen_url?.split('/').pop() || 'Alargador.png'}`)} 
+                alt={p.nombre_prod} 
+                className="producto-imagen" 
+                onError={(e) => { 
+                  e.target.onerror = null; 
+                  e.target.src = buildImageUrl('Alargador.png'); 
+                }}
+              />
+              <div className="featured-info">
+                <h4>{p.nombre_prod}</h4>
+                <p className="featured-price">${p.precio_prod}</p>
+                <p className="featured-stock">Stock: {p.stock_prod}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="no-products">No hay productos destacados por ahora.</p>
+        )}
       </div>
     </section>
   );
