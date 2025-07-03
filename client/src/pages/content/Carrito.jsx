@@ -2,7 +2,13 @@ import React, { useContext, useState } from 'react';
 import { CartContext } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
+import {
+  API_BASE_URL,
+  FRONTEND_URL,
+  buildApiUrl,
+  buildImageUrl,
+  buildFrontendUrl
+} from '../../config/config';
 import '../css/Carrito.css';
 
 function Cart() {
@@ -14,20 +20,19 @@ function Cart() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const buyOrder = `OC-${Date.now()}`;
       const sessionId = `S-${Date.now()}`;
-      
-      // Mantén la URL del servidor local para la API
+
       const response = await axios.post(buildApiUrl('/api/webpay/create'), {
         buyOrder,
         sessionId,
         amount: total,
-        returnUrl: buildApiUrl("/api/webpay/commit")
+        returnUrl: buildFrontendUrl('/webpay-simulator') // Redirección al frontend
       });
 
       window.location.href = response.data.url;
-      
+
     } catch (err) {
       console.error('Error al iniciar el pago:', err);
       setError('Ocurrió un error al procesar el pago. Intente nuevamente.');
@@ -49,48 +54,38 @@ function Cart() {
   return (
     <div className="cart-container">
       <h2 className="cart-title">Tu Carrito de Compras</h2>
-      
-      {/* Resto del código actual */}
+
       <div className="cart-items">
-    {cart.map(item => (
-      <div key={item.id_prod} className="cart-item">
-        <div className="cart-item-img">
-          <span className="cart-item-icon">📦</span>
-        </div>
-        <div className="cart-item-details">
-          <h3>{item.nombre_prod}</h3>
-          <span className="cart-item-categoria">{item.tipo_producto || 'General'}</span>
-        </div>
-        <div className="cart-item-price">${item.precio_prod}</div>
-        <div className="cart-item-quantity">
-          <button 
-            className="quantity-btn" 
-            onClick={() => updateQuantity(item.id_prod, item.quantity - 1)}
-          >-</button>
-          <span>{item.quantity}</span>
-          <button 
-            className="quantity-btn" 
-            onClick={() => updateQuantity(item.id_prod, item.quantity + 1)}
-          >+</button>
-        </div>
-        <div className="cart-item-subtotal">
-          ${(item.precio_prod * item.quantity).toFixed(2)}
-        </div>
-        <button 
-          className="cart-item-remove" 
-          onClick={() => removeFromCart(item.id_prod)}
-        >×</button>
+        {cart.map(item => (
+          <div key={item.id_prod} className="cart-item">
+            <div className="cart-item-img">
+              <span className="cart-item-icon">📦</span>
+            </div>
+            <div className="cart-item-details">
+              <h3>{item.nombre_prod}</h3>
+              <span className="cart-item-categoria">{item.tipo_producto || 'General'}</span>
+            </div>
+            <div className="cart-item-price">${item.precio_prod}</div>
+            <div className="cart-item-quantity">
+              <button className="quantity-btn" onClick={() => updateQuantity(item.id_prod, item.quantity - 1)}>-</button>
+              <span>{item.quantity}</span>
+              <button className="quantity-btn" onClick={() => updateQuantity(item.id_prod, item.quantity + 1)}>+</button>
+            </div>
+            <div className="cart-item-subtotal">
+              ${(item.precio_prod * item.quantity).toFixed(2)}
+            </div>
+            <button className="cart-item-remove" onClick={() => removeFromCart(item.id_prod)}>×</button>
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-      
-        <div className="cart-summary">
+
+      <div className="cart-summary">
         <div className="cart-total">
           <span>Total:</span>
           <span>${total.toFixed(2)}</span>
         </div>
         <div className="cart-total">
-          <span>Envio:</span>
+          <span>Envío:</span>
           <span><del>$8990.00</del> <strong className="envio-gratis">GRATIS!</strong></span>
         </div>
 
@@ -98,11 +93,7 @@ function Cart() {
 
         <div className="cart-actions">
           <button onClick={clearCart} className="btn-secondary">Vaciar carrito</button>
-          <button 
-            onClick={iniciarPago} 
-            className="btn-primary"
-            disabled={loading}
-          >
+          <button onClick={iniciarPago} className="btn-primary" disabled={loading}>
             {loading ? 'Procesando...' : 'Pagar con WebPay'}
           </button>
         </div>
