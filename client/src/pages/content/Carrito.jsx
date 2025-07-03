@@ -3,10 +3,7 @@ import { CartContext } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import {
-  API_BASE_URL,
-  FRONTEND_URL,
   buildApiUrl,
-  buildImageUrl,
   buildFrontendUrl
 } from '../../config/config';
 import '../css/Carrito.css';

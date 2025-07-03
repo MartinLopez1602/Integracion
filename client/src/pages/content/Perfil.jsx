@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
-import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
+import { buildApiUrl } from '../../config/config';
 import '../css/Perfil.css';
 
 function Perfil() {

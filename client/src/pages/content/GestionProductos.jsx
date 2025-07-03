@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
+import { buildApiUrl, buildImageUrl } from '../../config/config';
 import ProductForm from '../../components/content/ProductForm';
 import '../css/GestionProductos.css';
 
@@ -259,7 +259,7 @@ function GestionProductos() {
               className="filtro-select"
             >
               <option value="todos">Todos</option>
-              <option value="disponible">Disponible (>10)</option>
+              <option value="disponible">Disponible (&gt;10)</option>
               <option value="bajo">Stock Bajo (1-10)</option>
               <option value="agotado">Agotado (0)</option>
             </select>
@@ -322,7 +322,7 @@ function GestionProductos() {
                 Stock
                 <span className="stock-legend">
                   <span className="legend-item">
-                    <span className="badge badge-success"></span> >10
+                    <span className="badge badge-success"></span> &gt;10
                   </span>
                   <span className="legend-item">
                     <span className="badge badge-warning"></span> 1-10

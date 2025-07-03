@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
+import { buildApiUrl } from '../../config/config';
 import '../css/WebpaySimulator.css';
 import { CartContext } from '../../context/CartContext'; 
 

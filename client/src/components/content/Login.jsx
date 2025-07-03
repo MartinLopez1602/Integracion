@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
+import { buildApiUrl } from '../../config/config';
 import '../css/Login.css';
 
 export default function Login({ isOpen, onClose, onSwitch = () => {} }) {

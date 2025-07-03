@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
+import { buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/Productos.css';
 import { CartContext } from '../../context/CartContext';
 import FiltroPanel from '../../components/content/FiltroPanel';

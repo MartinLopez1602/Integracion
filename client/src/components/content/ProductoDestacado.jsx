@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { API_BASE_URL, buildApiUrl, buildImageUrl } from '../../config/config';
+import { buildApiUrl, buildImageUrl } from '../../config/config';
 import '../css/ProductoDestacado.css';
 
 function FeaturedProducts() {
