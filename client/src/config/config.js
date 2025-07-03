@@ -1,26 +1,31 @@
-// para cambiar la urls en base en que enviroment
 const configs = {
-  development: 'http://localhost:5000',
-  production: 'https://integracion-integracion.up.railway.app'
+  development: {
+    API_BASE_URL: 'http://localhost:5000',
+    FRONTEND_URL: 'http://localhost:3000'
+  },
+  production: {
+    API_BASE_URL: 'https://integracion-integracion.up.railway.app',
+    FRONTEND_URL: 'https://integracion-five.vercel.app'
+  }
 };
 
-// Asegúrate de que NODE_ENV esté correctamente establecido durante el build
+const ENV = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+
+export const API_BASE_URL = configs[ENV].API_BASE_URL;
+export const FRONTEND_URL = configs[ENV].FRONTEND_URL;
+
 console.log('NODE_ENV:', process.env.NODE_ENV);
-
-export const API_BASE_URL = process.env.NODE_ENV === 'production' //cambiar si es local
-  ? configs.production 
-  : configs.development;
-
-// Log para depuración  
 console.log('API_BASE_URL configurada como:', API_BASE_URL);
+console.log('FRONTEND_URL configurada como:', FRONTEND_URL);
 
-// Función para construir URLs de API
-export const buildApiUrl = (endpoint) => {
-  return `${API_BASE_URL}${endpoint}`;
+export const buildApiUrl = (endpoint) => `${API_BASE_URL}${endpoint}`;
+
+export const buildImageUrl = (imagePath) => {
+  const cleanPath = imagePath?.replace(/^\/?images\//, '');
+  return `${API_BASE_URL}/images/${cleanPath || 'Alargador.png'}`;
 };
 
-// Función para construir URLs de imágenes desde el servidor
-export const buildImageUrl = (imagePath) => {
-  // Las imágenes están servidas desde el backend
-  return `${API_BASE_URL}/images/${imagePath}`;
+export const buildFrontendUrl = (path) => {
+  const cleanPath = path?.startsWith('/') ? path.slice(1) : path;
+  return `${FRONTEND_URL}/${cleanPath}`;
 };
