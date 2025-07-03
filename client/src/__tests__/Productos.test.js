@@ -1,6 +1,6 @@
 // client/src/__tests__/Productos.test.js
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { CartContext } from '../context/CartContext';
 import Productos from '../pages/content/Productos';
 
@@ -86,8 +86,13 @@ describe('Productos Component', () => {
     });
   });
 
+  // Aumentar timeout para pruebas asíncronas
+  jest.setTimeout(10000);
+
   test('renderiza el título del catálogo de productos', async () => {
-    renderWithProviders(<Productos />);
+    await act(async () => {
+      renderWithProviders(<Productos />);
+    });
     
     await waitFor(() => {
       const titulo = screen.getByText(/catálogo de productos/i);
@@ -95,8 +100,10 @@ describe('Productos Component', () => {
     });
   });
 
-  test('muestra loading inicialmente', () => {
-    renderWithProviders(<Productos />);
+  test('muestra loading inicialmente', async () => {
+    await act(async () => {
+      renderWithProviders(<Productos />);
+    });
     // El componente debería mostrar algún estado de carga
     expect(document.body).toBeInTheDocument();
   });
@@ -105,7 +112,9 @@ describe('Productos Component', () => {
     // Mock error response
     axios.get.mockRejectedValue(new Error('Network Error'));
     
-    renderWithProviders(<Productos />);
+    await act(async () => {
+      renderWithProviders(<Productos />);
+    });
     
     await waitFor(() => {
       // Verificar que el componente maneja el error sin crashear

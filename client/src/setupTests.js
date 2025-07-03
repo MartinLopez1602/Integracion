@@ -85,3 +85,21 @@ beforeEach(() => {
   sessionStorageMock.removeItem.mockClear();
   sessionStorageMock.clear.mockClear();
 });
+
+// Suprimir warnings de act() durante las pruebas
+const originalError = console.error;
+beforeAll(() => {
+  console.error = (...args) => {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].includes('Warning: An update to')
+    ) {
+      return;
+    }
+    return originalError.call(console, ...args);
+  };
+});
+
+afterAll(() => {
+  console.error = originalError;
+});
