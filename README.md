@@ -68,7 +68,6 @@ npm run migrate
 npm start
 
 Este comando ejecutará concurrentemente:
-
 - El servidor en http://localhost:5000
 - El cliente React en http://localhost:3000
 
