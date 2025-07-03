@@ -1,7 +1,10 @@
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-
 const { Pool } = require('pg');
+
+//para que no falle en producción si no se define el .env, claramente esto era lo que fallaba XD
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+}
 
 // Verificación preventiva
 if (!process.env.DB_PASSWORD || typeof process.env.DB_PASSWORD !== 'string') {
