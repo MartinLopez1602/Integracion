@@ -1,6 +1,6 @@
 const configs = {
   development: {
-    API_BASE_URL: 'http://localhost:5000',
+    API_BASE_URL: 'https://integracion-integracion.up.railway.app',
     FRONTEND_URL: 'http://localhost:3000'
   },
   production: {
@@ -9,7 +9,8 @@ const configs = {
   }
 };
 
-const ENV = process.env.NODE_ENV === 'production' ? 'production' : 'development';
+// Siempre usar Railway API - tanto en desarrollo como en producción
+const ENV = 'production'; // Forzar uso de Railway API
 
 export const API_BASE_URL = configs[ENV].API_BASE_URL;
 export const FRONTEND_URL = configs[ENV].FRONTEND_URL;
