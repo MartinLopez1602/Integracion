@@ -15,6 +15,16 @@ process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'test-refresh
 process.env.ACCESS_EXPIRES = process.env.ACCESS_EXPIRES || '900';
 process.env.REFRESH_EXPIRES = process.env.REFRESH_EXPIRES || '604800';
 
+// Global cleanup for database connections
+const pool = require('./config/db');
+
+// Close database pool after all tests are done
+afterAll(async () => {
+  if (pool && typeof pool.end === 'function') {
+    await pool.end();
+  }
+});
+
 // Silenciar logs molestos durante las pruebas
 const originalConsoleLog = console.log;
 

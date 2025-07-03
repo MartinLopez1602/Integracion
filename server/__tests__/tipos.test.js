@@ -1,13 +1,9 @@
 // server/__tests__/tipos.test.js
 const request = require('supertest');
-const express = require('express');
-const tiposRoutes = require('../routes/tipo_producto');
-
-const app = express();
-app.use(express.json());
-app.use('/api/tipo-producto', tiposRoutes);
+const app = require('../app'); // Usar la app principal en lugar de crear una nueva
 
 describe('API de Tipos de Producto', () => {
+
   test('GET /api/tipo-producto retorna tipos de productos', async () => {
     const response = await request(app)
       .get('/api/tipo-producto')
