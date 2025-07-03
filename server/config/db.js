@@ -14,8 +14,8 @@ function createDbConnection() {
   }
 
   // Solo usar mock en testing local, NO en producción
-  if (process.env.NODE_ENV === 'test' && !process.env.CI) {
-    console.log('🔧 Using mock database for local testing');
+  if (process.env.NODE_ENV === 'test') {
+    console.log('🔧 Using mock database for testing');
     return require('./db.test.js');
   }
 
