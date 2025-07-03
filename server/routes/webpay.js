@@ -2,6 +2,11 @@ const router = require('express').Router();
 const { WebpayPlus } = require('transbank-sdk');
 const pool = require('../config/db');
 
+// Configuración de URLs según el entorno
+const FRONTEND_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://integracion-five.vercel.app'
+  : 'http://localhost:3000';
+
 // Inicializar WebPay en modo de integración (desarrollo)
 const webpay = new WebpayPlus.Transaction(
   '597055555532',
@@ -80,7 +85,7 @@ router.post('/create', async (req, res) => {
     );
 
     return res.json({
-      url: `http://localhost:3000/webpay-simulator?token=${simulatedToken}&amount=${amount}`,
+      url: `${FRONTEND_URL}/webpay-simulator?token=${simulatedToken}&amount=${amount}`,
       token: simulatedToken
     });
 
@@ -140,7 +145,7 @@ router.get('/commit', async (req, res) => {
         'UPDATE pedido SET id_estado_ped = 2 WHERE id_pedido = (SELECT id_pedido FROM pedido WHERE id_estado_ped = 1 ORDER BY fecha_pedido DESC LIMIT 1)'
       );
 
-      return res.redirect('http://localhost:3000/pago-exitoso?token=' + token_ws);
+      return res.redirect(`${FRONTEND_URL}/pago-exitoso?token=${token_ws}`);
     }
 
     const response = await webpay.commit(token_ws);
@@ -151,14 +156,14 @@ router.get('/commit', async (req, res) => {
         [token_ws]
       );
 
-      return res.redirect('http://localhost:3000/pago-exitoso?token=' + token_ws);
+      return res.redirect(`${FRONTEND_URL}/pago-exitoso?token=${token_ws}`);
     } else {
-      return res.redirect('http://localhost:3000/pago-fallido?token=' + token_ws);
+      return res.redirect(`${FRONTEND_URL}/pago-fallido?token=${token_ws}`);
     }
 
   } catch (error) {
     console.error('Error al confirmar transacción WebPay:', error.message);
-    res.redirect('http://localhost:3000/pago-fallido');
+    res.redirect(`${FRONTEND_URL}/pago-fallido`);
   }
 });
 
