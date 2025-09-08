@@ -57,14 +57,14 @@ jobs:
         npm run test:coverage:server
     
     - name: Upload client coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         file: ./client/coverage/lcov.info
         flags: client
         name: client-coverage
     
     - name: Upload server coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         file: ./server/coverage/lcov.info
         flags: server
